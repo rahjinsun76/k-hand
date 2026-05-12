@@ -1,0 +1,22 @@
+631:const Certification = ({ config, onEditImage, onOpenApply, isAdmin, onOpenAdminView }: { config: any, onEditImage?: (field: string) => void, onOpenApply: () => void, isAdmin: boolean, onOpenAdminView: () => void }) => {
+703:const Gallery = ({ items, isAdmin, onDelete, onEdit, onAdd }: { items: any[], isAdmin: boolean, onDelete: (id: string) => void, onEdit: (item: any) => void, onAdd: () => void }) => {
+711:          {isAdmin && (
+731:              onClick={() => isAdmin && onEdit(img)}
+741:                  {isAdmin && (
+747:               {isAdmin && img.id && (
+1032:  isAdmin, 
+1039:  isAdmin: boolean, 
+1055:                  {isAdmin && (
+1085:                          {isAdmin && item.id && (
+1315:  const [isAdmin, setIsAdmin] = useState(false);
+1325:  const [isAdminViewModalOpen, setIsAdminViewModalOpen] = useState(false);
+1507:        <Hero config={config} onEditImage={isAdmin ? handleEditConfigImage : undefined as any} />
+1508:        <Mission config={config} onEditImage={isAdmin ? handleEditConfigImage : undefined as any} />
+1509:        <About config={config} onEditImage={isAdmin ? handleEditConfigImage : undefined as any} />
+1510:        <Programs config={config} onEditProgramImage={isAdmin ? handleEditProgramImage : undefined as any} />
+1513:          onEditImage={isAdmin ? handleEditConfigImage : undefined as any} 
+1515:          isAdmin={isAdmin}
+1520:          isAdmin={isAdmin} 
+1527:          isAdmin={isAdmin} 
+1536:        <Contact config={config} onEditImage={isAdmin ? handleEditConfigImage : undefined} />
+1593:        isOpen={isAdminViewModalOpen}

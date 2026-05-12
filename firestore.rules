@@ -1,0 +1,101 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Helpers ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isEmailVerified() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) ||
+        request.auth.token.email == 'rahjinsun76@gmail.com'
+      );
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // --- Notice Validation ---
+    function isValidNotice(data) {
+      return (!('title' in data) || (data.title is string && data.title.size() <= 500)) &&
+             (!('date' in data) || (data.date is string && data.date.size() <= 20)) &&
+             (!('badge' in data) || (data.badge is string && data.badge.size() <= 50)) &&
+             (!('content' in data) || (data.content is string && data.content.size() <= 10000));
+    }
+
+    // --- Gallery Validation ---
+    function isValidGalleryItem(data) {
+      return (!('src' in data) || (data.src is string && data.src.size() <= 1000000)) &&
+             (!('title' in data) || (data.title is string && data.title.size() <= 200)) &&
+             (!('category' in data) || (data.category is string && (data.category in ['성인', '아동', '노인', '자격증', '전체'])));
+    }
+
+    // --- Collection: Notices ---
+    match /notices/{noticeId} {
+      allow list: if true;
+      allow get: if true;
+      allow create: if isAdmin() && 
+                    incoming().keys().hasAll(['title', 'date', 'badge', 'createdAt']) &&
+                    isValidNotice(incoming()) && 
+                    (incoming().createdAt == request.time || incoming().createdAt == null);
+      allow update: if isAdmin() && 
+                    isValidNotice(incoming()) &&
+                    (!incoming().diff(existing()).affectedKeys().hasAny(['createdAt'])) &&
+                    incoming().diff(existing()).affectedKeys().hasOnly(['title', 'date', 'badge', 'content', 'updatedAt']) &&
+                    (incoming().updatedAt == request.time || !('updatedAt' in incoming()));
+      allow delete: if isAdmin();
+    }
+
+    // --- Collection: Gallery ---
+    match /gallery/{itemId} {
+      allow list: if true;
+      allow get: if true;
+      allow create: if isAdmin() && isValidId(itemId) && 
+                    incoming().keys().hasAll(['src', 'title', 'category', 'createdAt']) &&
+                    isValidGalleryItem(incoming()) && incoming().createdAt == request.time;
+      allow update: if isAdmin() && isValidId(itemId) && 
+                    (incoming().src == null || incoming().src is string) &&
+                    (!incoming().diff(existing()).affectedKeys().hasAny(['createdAt'])) &&
+                    incoming().diff(existing()).affectedKeys().hasOnly(['src', 'title', 'category', 'updatedAt']);
+      allow delete: if isAdmin() && isValidId(itemId);
+    }
+
+    // --- Collection: Admins (for RBAC) ---
+    match /admins/{adminId} {
+      allow read: if isSignedIn();
+      allow write: if false; // Locked to manual/server side
+    }
+
+    // --- Collection: Config (Dynamic Images & Stats) ---
+    match /config/main {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // --- Collection: Applications ---
+    match /applications/{appId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+  }
+}

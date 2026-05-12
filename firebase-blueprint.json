@@ -1,0 +1,100 @@
+{
+  "entities": {
+    "Notice": {
+      "title": "Notice",
+      "description": "Association announcements",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Heading of the notice"
+        },
+        "date": {
+          "type": "string",
+          "description": "Display date (YYYY.MM.DD)"
+        },
+        "badge": {
+          "type": "string",
+          "description": "Category badge (e.g., 중요, 교육, 이벤트)"
+        },
+        "content": {
+          "type": "string",
+          "description": "Optional detailed content"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server side timestamp"
+        }
+      },
+      "required": ["title", "date", "badge"]
+    },
+    "GalleryItem": {
+      "title": "Gallery Item",
+      "description": "Photos of association activities",
+      "type": "object",
+      "properties": {
+        "src": {
+          "type": "string",
+          "description": "Image URL (base64 or hosted path)"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the work or activity"
+        },
+        "category": {
+          "type": "string",
+          "enum": ["성인", "아동", "노인", "자격증"],
+          "description": "Target group or category"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server side timestamp"
+        }
+      },
+      "required": ["src", "title", "category"]
+    },
+    "AppStats": {
+      "title": "App Stats",
+      "description": "General stats for the homepage",
+      "type": "object",
+      "properties": {
+        "memberCount": {
+          "type": "string",
+          "description": "Display string for member count (e.g., 1,200+)"
+        },
+        "heroImage": {
+          "type": "string",
+          "description": "Main banner image"
+        },
+        "aboutImage": {
+          "type": "string",
+          "description": "About section image"
+        },
+        "missionImage": {
+          "type": "string",
+          "description": "Mission section image"
+        },
+        "programImages": {
+          "type": "object",
+          "description": "Images for program targets"
+        }
+      }
+    }
+  },
+  "firestore": {
+    "/notices": {
+      "schema": "Notice",
+      "description": "Collection of all announcements"
+    },
+    "/gallery": {
+      "schema": "GalleryItem",
+      "description": "Collection of gallery photos"
+    },
+    "/config/main": {
+      "schema": "AppStats",
+      "description": "Homepage configuration and stats"
+    }
+  }
+}
