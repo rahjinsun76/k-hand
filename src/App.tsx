@@ -599,27 +599,31 @@ const Programs = ({ config, onEditProgramImage }: { config: any, onEditProgramIm
   const targets = [
     {
       id: 1,
-      title: "성인대상 프로그램",
+      title: "성인 힐링",
       image: config?.programImages?.[1] || "https://images.unsplash.com/photo-1513519245088-0e12902e15cb?auto=format&fit=crop&q=80&w=600",
-      desc: "지친 일상에 온기를 불어넣는 힐링 아카데미, 임산부태교."
+      desc: "스트레스 완화 및 힐링",
+      icon: <Smile size={32} />
     },
     {
       id: 2,
-      title: "노인대상 프로그램",
+      title: "노인 실버",
       image: config?.programImages?.[2] || "https://images.unsplash.com/photo-1581579438747-1dc8c17bbce4?auto=format&fit=crop&q=80&w=600",
-      desc: "추억 회상과 인지 자극을 통한 행복한 노년, 노인우울감"
+      desc: "인지 자극 및 정서 안정",
+      icon: <Heart size={28} />
     },
     {
       id: 3,
-      title: "아동대상 프로그램",
+      title: "아동 창의",
       image: config?.programImages?.[3] || "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&q=80&w=600",
-      desc: "자신감을 키우고 정서적 성장을 돕는 놀이 교육"
+      desc: "집중력 및 창의력 향상",
+      icon: <Baby size={32} />
     },
     {
       id: 4,
-      title: "기업 및 출강",
+      title: "전문가 과정",
       image: config?.programImages?.[4] || "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=800",
-      desc: "기관 맞춤형 프로그램"
+      desc: "자격증 취득 및 전문가 양성",
+      icon: <GraduationCap size={32} />
     }
   ];
 
@@ -647,8 +651,15 @@ const Programs = ({ config, onEditProgramImage }: { config: any, onEditProgramIm
               transition={{ delay: idx * 0.1 }}
               className="group bg-white border border-slate-100 rounded-[32px] overflow-hidden hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 transition-all"
             >
+              <div className="p-8 pb-0">
+                <div className="w-16 h-16 bg-secondary rounded-2xl flex items-center justify-center text-primary mb-6">
+                  {target.icon}
+                </div>
+                <h4 className="text-xl sm:text-2xl font-bold mb-2 tracking-tight break-keep">{target.title}</h4>
+                <p className="text-slate-500 text-[13px] leading-relaxed break-keep mb-6">{target.desc}</p>
+              </div>
               <div 
-                className={`aspect-video w-full overflow-hidden relative ${onEditProgramImage ? 'cursor-pointer' : ''}`}
+                className={`aspect-[4/3] w-[90%] mx-auto mb-8 rounded-2xl overflow-hidden relative ${onEditProgramImage ? 'cursor-pointer' : ''}`}
                 onClick={() => onEditProgramImage && onEditProgramImage(target.id)}
               >
                 <img 
@@ -663,10 +674,6 @@ const Programs = ({ config, onEditProgramImage }: { config: any, onEditProgramIm
                     <span>사진 변경</span>
                   </div>
                 )}
-              </div>
-              <div className="p-6 sm:p-8">
-                <h4 className="text-xl sm:text-2xl font-bold mb-4 tracking-tight break-keep">{target.title}</h4>
-                <p className="text-slate-500 text-xs sm:text-sm leading-relaxed break-keep">{target.desc}</p>
               </div>
             </motion.div>
           ))}
@@ -1225,102 +1232,130 @@ const Mission = ({ config, onEditImage }: { config: any, onEditImage: (field: st
   };
 
 const Contact = ({ config, onEditImage }: { config: any, onEditImage?: (field: string) => void }) => {
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.name || !formData.phone) {
+      alert("이름과 연락처는 필수입력 항목입니다.");
+      return;
+    }
+    setIsSubmitting(true);
+    try {
+      await addApplication({ ...formData, email: '', program: '기타/문의' });
+      alert("신청이 성공적으로 완료되었습니다. 곧 담당자가 연락드리겠습니다.");
+      setFormData({ name: '', phone: '', message: '' });
+    } catch (err) {
+      alert("신청 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+      console.error(err);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <section id="contact" className="bg-white py-24">
       <div className="section-container">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-16 items-start">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-3xl md:text-4xl font-black mb-6 text-slate-900 tracking-tight break-keep">문의 & 상담</h2>
+              <h2 className="text-3xl md:text-5xl font-black mb-6 text-slate-900 tracking-tight break-keep">궁금하신 점이 있나요?</h2>
               <p className="text-lg text-slate-500 mb-12 leading-relaxed break-keep">
-                궁금하신 점이 있다면 편하게 연락주세요.<br />
-                전문 담당자가 친절하게 안내해 드립니다.
+                교육과정, 자격증, 출강 문의 등 언제든 환영합니다.
               </p>
               
-              <div className="space-y-6 border-t border-slate-100 pt-12">
-                 <div className="flex items-center gap-6 p-6 rounded-3xl bg-slate-50 border border-slate-100 group hover:border-primary transition-all">
+              <div className="space-y-6">
+                 <div className="flex items-center gap-6 p-6 rounded-3xl bg-slate-50/50 border border-slate-100 group hover:border-primary transition-all">
                     <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
                        <Phone size={28} />
                     </div>
                     <div>
-                      <p className="text-sm text-slate-400 font-bold mb-1 uppercase tracking-widest">Phone</p>
-                      <div className="flex flex-wrap items-baseline gap-x-2">
-                        <p className="text-2xl font-bold tracking-tight text-slate-800">010-2440-7666</p>
-                        <span className="text-sm font-medium text-slate-400 whitespace-nowrap">(문자전용)</span>
+                      <p className="text-xs text-slate-400 font-bold mb-1 uppercase tracking-widest">PHONE</p>
+                      <div className="flex flex-wrap items-center gap-x-3">
+                        <p className="text-3xl font-black tracking-tight text-slate-900">010-2440-7666</p>
+                        <span className="text-sm font-black text-primary bg-primary/10 px-3 py-1 rounded-lg animate-pulse">문자전용</span>
                       </div>
                     </div>
                  </div>
                  
-                 <div className="flex items-center gap-6 p-6 rounded-3xl bg-slate-50 border border-slate-100 group hover:border-primary transition-all">
+                 <div className="flex items-center gap-6 p-6 rounded-3xl bg-slate-50/50 border border-slate-100 group hover:border-primary transition-all">
                     <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
                        <Mail size={28} />
                     </div>
                     <div>
-                      <p className="text-sm text-slate-400 font-bold mb-1 uppercase tracking-widest">E-mail</p>
-                      <p className="text-2xl font-bold tracking-tight text-slate-800">nanalaa@naver.com</p>
+                      <p className="text-xs text-slate-400 font-bold mb-1 uppercase tracking-widest">E-MAIL</p>
+                      <p className="text-xl font-bold tracking-tight text-slate-800">nanalaa@naver.com</p>
                     </div>
                  </div>
-              </div>
 
-              <div className="flex gap-4 mt-12">
-                 <a 
-                   href="https://blog.naver.com/sewingtherapy" 
-                   target="_blank" 
-                   rel="noreferrer"
-                   className="w-14 h-14 bg-slate-100 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition-all"
-                   title="네이버 블로그"
-                 >
-                    <BookOpen size={24} />
-                 </a>
-                 <a 
-                   href="https://www.instagram.com/korea_hand_healing_art?igsh=cDl0cGFkN2twd2l6" 
-                   target="_blank" 
-                   rel="noreferrer"
-                   className="w-14 h-14 bg-slate-100 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition-all"
-                   title="인스타그램"
-                 >
-                    <Instagram size={24} />
-                 </a>
+                 <div className="flex gap-4 pt-8">
+                    <a 
+                      href="https://blog.naver.com/sewingtherapy" 
+                      target="_blank" 
+                      rel="noreferrer"
+                      className="w-16 h-16 bg-slate-100 rounded-3xl flex items-center justify-center text-slate-600 hover:bg-[#2DB400] hover:text-white transition-all shadow-sm group/sns"
+                      title="네이버 블로그"
+                    >
+                        <BookOpen size={28} className="group-hover/sns:scale-110 transition-transform" />
+                    </a>
+                    <a 
+                      href="https://www.instagram.com/korea_hand_healing_art?igsh=cDl0cGFkN2twd2l6" 
+                      target="_blank" 
+                      rel="noreferrer"
+                      className="w-16 h-16 bg-slate-100 rounded-3xl flex items-center justify-center text-slate-600 hover:bg-gradient-to-tr hover:from-[#F58529] hover:to-[#D12856] hover:text-white transition-all shadow-sm group/sns"
+                      title="인스타그램"
+                    >
+                        <Instagram size={28} className="group-hover/sns:scale-110 transition-transform" />
+                    </a>
+                 </div>
               </div>
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="relative p-2"
+              className="bg-slate-50/50 rounded-[40px] p-8 md:p-12 border border-slate-100"
             >
-               <div 
-                 className={`aspect-square bg-slate-100 rounded-[64px] overflow-hidden p-8 border-2 border-slate-50 relative z-10 ${onEditImage ? 'cursor-pointer' : ''}`}
-                 onClick={() => onEditImage && onEditImage('contactImage')}
-               >
-                  <img 
-                    src={config?.contactImage || "https://images.unsplash.com/photo-1544411047-c491e34a2450?auto=format&fit=crop&q=80&w=800"} 
-                    alt="K-Hand Craft Workshop" 
-                    className="w-full h-full object-cover rounded-[48px] shadow-2xl"
-                    referrerPolicy="no-referrer"
+               <h4 className="text-2xl font-bold text-center mb-10">교육 상담 신청</h4>
+               <form onSubmit={handleSubmit} className="space-y-5">
+                  <input 
+                    type="text" 
+                    placeholder="성함 (필수)" 
+                    value={formData.name}
+                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    className="w-full bg-white border border-slate-200 rounded-2xl p-5 text-sm focus:ring-2 focus:ring-primary focus:outline-none transition-all shadow-sm"
                   />
-                  {onEditImage && (
-                    <div className="absolute bottom-12 right-12 bg-primary text-white p-4 rounded-full shadow-2xl flex items-center gap-2 font-bold text-sm z-20">
-                      <ImageIcon size={20} />
-                      <span>메인 사진 변경</span>
-                    </div>
-                  )}
-               </div>
-               
-               {/* Decorations removed secondary image block */}
-               {/* Decorations */}
-               <div className="absolute top-0 right-0 w-40 h-40 bg-secondary rounded-full -z-10 blur-3xl opacity-50" />
-               <div className="absolute bottom-0 left-0 w-60 h-60 bg-primary/20 rounded-full -z-10 blur-3xl opacity-50" />
-               
-               <div className="absolute bottom-12 -right-8 bg-white p-8 rounded-[40px] shadow-2xl text-center border border-slate-50 hidden lg:block">
-                  <div className="w-12 h-1 bg-primary mx-auto mb-4 rounded-full" />
-                  <p className="font-black text-3xl tracking-tighter text-slate-900 mb-1">협회</p>
-                  <p className="text-slate-400 font-bold text-sm">Korea Craft Therapy</p>
-               </div>
+                  <input 
+                    type="tel" 
+                    placeholder="연락처 (필수)" 
+                    value={formData.phone}
+                    onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                    className="w-full bg-white border border-slate-200 rounded-2xl p-5 text-sm focus:ring-2 focus:ring-primary focus:outline-none transition-all shadow-sm"
+                  />
+                  <textarea 
+                    placeholder="문의 내용" 
+                    value={formData.message}
+                    onChange={(e) => setFormData({...formData, message: e.target.value})}
+                    rows={4}
+                    className="w-full bg-white border border-slate-200 rounded-2xl p-5 text-sm focus:ring-2 focus:ring-primary focus:outline-none transition-all shadow-sm resize-none"
+                  />
+                  <button 
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full bg-primary text-white py-5 rounded-2xl font-bold text-lg hover:bg-primary-dark transition-all disabled:bg-slate-300 shadow-lg shadow-primary/20"
+                  >
+                    {isSubmitting ? "전송 중..." : "신청서 보내기"}
+                  </button>
+               </form>
             </motion.div>
         </div>
       </div>
@@ -1330,19 +1365,25 @@ const Contact = ({ config, onEditImage }: { config: any, onEditImage?: (field: s
 
 const MaterialBanner = () => {
   return (
-    <div className="bg-primary py-3 sm:py-5 sticky bottom-0 z-40 border-t border-white/20 shadow-[0_-10px_30px_rgba(0,137,123,0.2)]">
-      <div className="max-w-7xl mx-auto px-6 flex flex-row justify-center sm:justify-between items-center text-white gap-4">
-        <div className="hidden sm:flex items-center gap-3">
-            <ShoppingBag className="text-yellow-400" size={24} />
-            <p className="font-bold text-lg">온라인 쇼핑몰에서 전문 공예 재료를 만나보세요</p>
+    <div className="bg-primary py-8 sm:py-12 border-t border-white/20 shadow-xl overflow-hidden relative">
+      <div className="absolute top-0 left-0 w-full h-full bg-black/5 pointer-events-none" />
+      <div className="max-w-7xl mx-auto px-6 relative z-10 flex flex-col md:flex-row justify-between items-center text-white gap-8">
+        <div className="flex items-center gap-6">
+            <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-md">
+              <ShoppingBag className="text-yellow-400" size={32} />
+            </div>
+            <div>
+              <p className="font-black text-2xl mb-1 tracking-tight">K-Hand 전용 쇼핑몰 OPEN</p>
+              <p className="text-white/70 font-medium break-keep">협회가 검증한 고퀄리티 공예 재료와 키트를 만나보세요.</p>
+            </div>
         </div>
         <a 
           href="https://mkt.shopping.naver.com/link/6878ed78af62921b08b9bd2c"
           target="_blank"
           rel="noreferrer"
-          className="bg-white text-primary px-8 py-3 rounded-2xl font-black text-sm flex items-center gap-2 hover:bg-slate-100 transition-all hover:scale-105"
+          className="bg-white text-primary px-12 py-5 rounded-2xl font-black text-lg flex items-center gap-3 hover:bg-slate-100 transition-all hover:scale-105 shadow-2xl"
         >
-          쇼핑몰 바로가기 <ExternalLink size={16} />
+          쇼핑몰 바로가기 <ExternalLink size={24} />
         </a>
       </div>
     </div>
@@ -1580,9 +1621,9 @@ export default function App() {
             setIsDetailModalOpen(true);
           }}
         />
+        <MaterialBanner />
         <Contact config={config} onEditImage={isAdmin ? handleEditConfigImage : undefined} />
       </main>
-      <MaterialBanner />
       
       <footer className="bg-slate-950 text-white py-20">
         <div className="section-container !py-0">

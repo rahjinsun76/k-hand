@@ -11,14 +11,17 @@ import {
   query, 
   orderBy, 
   serverTimestamp,
-  getDocFromServer,
+  getDoc,
   onSnapshot,
-  setDoc
+  setDoc,
+  initializeFirestore
 } from 'firebase/firestore';
 import firebaseConfig from '../firebase-applet-config.json';
 
 const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+export const db = initializeFirestore(app, {
+  experimentalForceLongPolling: true,
+}, firebaseConfig.firestoreDatabaseId);
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 
@@ -63,7 +66,7 @@ export function handleFirestoreError(error: unknown, operationType: OperationTyp
 // Connection test
 async function testConnection() {
   try {
-    await getDocFromServer(doc(db, 'test', 'connection'));
+    await getDoc(doc(db, 'test', 'connection'));
   } catch (error) {
     if(error instanceof Error && error.message.includes('the client is offline')) {
       console.error("Please check your Firebase configuration or internet connection.");
@@ -167,7 +170,7 @@ export const updateGalleryItem = async (id: string, data: Partial<{ src: string;
 export const getMainConfig = async () => {
   const path = 'config/main';
   try {
-    const docSnap = await getDocFromServer(doc(db, path));
+    const docSnap = await getDoc(doc(db, path));
     if (docSnap.exists()) {
       return docSnap.data();
     }
