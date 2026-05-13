@@ -1,13 +1,105 @@
-<!doctype html>
-<html lang="en">
-  <head>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>한국공예치료사 협회 K-Hand</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
+    <title>한국공예치료사 협회 K-Hand | 마음을 치유하는 공예</title>
+    <!-- 검색 엔진 최적화 (SEO) -->
+    <meta name="description" content="한국공예치료사 협회(K-Hand) 공식 홈페이지입니다. 손으로 만드는 즐거움과 공예를 통한 심리 치유, 자격증 과정 및 교육 정보를 제공합니다." />
+    <meta name="keywords" content="공예치료, 한국공예치료사협회, K-Hand, 원예치료, 심리치유, 공예자격증, 직업능력개발원, 평생교육" />
+    <meta property="og:title" content="한국공예치료사 협회 K-Hand" />
+    <meta property="og:description" content="공예를 통해 마음을 치유하고 성장하는 커뮤니티입니다." />
+    <meta property="og:type" content="website" />
+    <meta name="naver-site-verification" content="89538e9b617341c56fe95ea879b874f8" />
+    
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; }
+        .hero-bg { background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1513519245088-0e12902e15da?auto=format&fit=crop&q=80&w=2000'); background-size: cover; background-position: center; }
+    </style>
+</head>
+<body class="bg-slate-50">
+    <div id="root">
+        <!-- 네비게이션 -->
+        <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-20 items-center">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">K-Hand</span>
+                        <div class="hidden md:block h-6 w-[1px] bg-slate-200 mx-4"></div>
+                        <span class="hidden md:block text-slate-600 font-medium tracking-tight">한국공예치료사 협회</span>
+                    </div>
+                    <div class="hidden md:flex space-x-10 text-slate-600 font-medium">
+                        <a href="#" class="hover:text-emerald-600 transition-colors">협회소개</a>
+                        <a href="#" class="hover:text-emerald-600 transition-colors">교육과정</a>
+                        <a href="#" class="hover:text-emerald-600 transition-colors">자격증안내</a>
+                        <a href="#" class="hover:text-emerald-600 transition-colors">커뮤니티</a>
+                    </div>
+                    <button class="bg-emerald-600 text-white px-6 py-2.5 rounded-full font-bold hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-200 active:scale-95">문의하기</button>
+                </div>
+            </div>
+        </nav>
 
+        <!-- 히어로 섹션 -->
+        <header class="hero-bg h-[600px] flex items-center justify-center text-center text-white">
+            <div class="max-w-4xl px-4">
+                <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">손끝에서 피어나는<br/><span class="text-emerald-400">마음의 치유, 공예</span></h1>
+                <p class="text-lg md:text-xl text-slate-200 mb-10 leading-relaxed font-light">한국공예치료사 협회는 공예를 통해 사람의 마음을 어루만지고,<br/>창의적인 일상을 되찾아드리는 전문가를 양성합니다.</p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button class="bg-white text-emerald-900 px-10 py-4 rounded-xl font-bold text-lg hover:bg-slate-100 transition-all shadow-xl">교육과정 둘러보기</button>
+                    <button class="bg-emerald-600/30 backdrop-blur-md border border-white/30 text-white px-10 py-4 rounded-xl font-bold text-lg hover:bg-white/20 transition-all">협회 소개 영상</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- 핵심 가치 -->
+        <section class="py-24 max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">공예치료의 목적</h2>
+                <div class="w-16 h-1 bg-emerald-500 mx-auto rounded-full"></div>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white p-10 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all group">
+                    <div class="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-emerald-600 transition-colors">
+                        <svg class="w-8 h-8 text-emerald-600 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-4">심리적 안정</h3>
+                    <p class="text-slate-600 leading-relaxed italic">"무언가에 몰입하는 과정 자체가 커다란 명상이자 치유가 됩니다."</p>
+                </div>
+                <div class="bg-white p-10 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all group">
+                    <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-blue-600 transition-colors">
+                        <svg class="w-8 h-8 text-blue-600 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-4">창의성 발달</h3>
+                    <p class="text-slate-600 leading-relaxed">손을 움직여 나만의 작품을 완성하며 성취감과 숨겨진 창의성을 발견합니다.</p>
+                </div>
+                <div class="bg-white p-10 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all group">
+                    <div class="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-amber-600 transition-colors">
+                        <svg class="w-8 h-8 text-amber-600 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-4">사회적 연결</h3>
+                    <p class="text-slate-600 leading-relaxed">함께 만들고 소통하며 사회적 고립감을 해소하고 유대감을 형성합니다.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 푸터 -->
+        <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800">
+            <div class="max-w-7xl mx-auto px-4 text-center md:text-left flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <span class="text-2xl font-bold text-white mb-2 block">K-Hand</span>
+                    <p class="text-sm">한국공예치료사 협회 | 대표: 홍길동 | 주소: 서울특별시 OO구 OO로 123</p>
+                    <p class="text-sm mt-1">이메일: khand@khand.org | 전화: 02-1234-5678</p>
+                </div>
+                <div class="text-sm">
+                    <p>&copy; 2024 한국공예치료사 협회. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
