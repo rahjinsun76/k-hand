@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://공예치료.art/sitemap.xml
