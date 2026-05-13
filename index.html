@@ -1,105 +1,510 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>한국공예치료사 협회 K-Hand | 마음을 치유하는 공예</title>
-    <!-- 검색 엔진 최적화 (SEO) -->
-    <meta name="description" content="한국공예치료사 협회(K-Hand) 공식 홈페이지입니다. 손으로 만드는 즐거움과 공예를 통한 심리 치유, 자격증 과정 및 교육 정보를 제공합니다." />
-    <meta name="keywords" content="공예치료, 한국공예치료사협회, K-Hand, 원예치료, 심리치유, 공예자격증, 직업능력개발원, 평생교육" />
-    <meta property="og:title" content="한국공예치료사 협회 K-Hand" />
-    <meta property="og:description" content="공예를 통해 마음을 치유하고 성장하는 커뮤니티입니다." />
-    <meta property="og:type" content="website" />
+    <meta name="description" content="한국공예치료사 협회(K-Hand) 공식 홈페이지입니다. 손으로 만드는 즐거움과 공예를 통한 심리 치유 정보를 제공합니다.">
     <meta name="naver-site-verification" content="89538e9b617341c56fe95ea879b874f8" />
     
-    <!-- Tailwind CSS (CDN) -->
+    <!-- CDN 라이브러리 로드 -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     
+    <!-- Firebase 설정 (Firebase 9+ Modular CDN) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+        import { 
+            getFirestore, collection, getDocs, getDoc, setDoc, addDoc, updateDoc, deleteDoc, 
+            query, orderBy, doc, serverTimestamp 
+        } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            projectId: "gen-lang-client-0114261730",
+            appId: "1:509035438594:web:9b535deccae3f3c474fd1b",
+            apiKey: "AIzaSyDOz1d7UDXqv9Fa7-9aKELVYjuyt_vsQp4",
+            authDomain: "gen-lang-client-0114261730.firebaseapp.com",
+            firestoreDatabaseId: "ai-studio-c330bcb8-f88c-42dc-bd0d-645124a1c572",
+            storageBucket: "gen-lang-client-0114261730.firebasestorage.app",
+            messagingSenderId: "509035438594"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+        const auth = getAuth(app);
+        const googleProvider = new GoogleAuthProvider();
+
+        // Expose to window for Babel script
+        window.fb = {
+            db, auth, googleProvider,
+            // Helper functions to simplify React code (functional style)
+            collection, getDocs, getDoc, setDoc, addDoc, updateDoc, deleteDoc, 
+            query, orderBy, doc, serverTimestamp,
+            signInWithPopup, signOut, onAuthStateChanged
+        };
+        
+        // Signal that firebase is ready
+        window.dispatchEvent(new Event('firebase-ready'));
+    </script>
+
     <style>
-        body { font-family: 'Noto Sans KR', sans-serif; }
-        .hero-bg { background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1513519245088-0e12902e15da?auto=format&fit=crop&q=80&w=2000'); background-size: cover; background-position: center; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+        
+        :root {
+            --primary: #00897B;
+            --primary-dark: #00695C;
+            --secondary: #E0F2F1;
+        }
+
+        body { 
+            font-family: 'Inter', 'Noto Sans KR', sans-serif; 
+            color: #1e293b;
+            background-color: #ffffff;
+        }
+
+        .section-container { 
+            max-width: 1280px; 
+            margin: 0 auto; 
+            padding: 3rem 1rem; 
+        }
+
+        @media (min-width: 768px) { 
+            .section-container { padding: 4rem 2rem; } 
+        }
+
+        .text-primary { color: var(--primary); }
+        .bg-primary { background-color: var(--primary); }
+        .bg-primary-dark { background-color: var(--primary-dark); }
+        .bg-secondary { background-color: var(--secondary); }
+        .border-primary { border-color: var(--primary); }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .break-keep { word-break: keep-all; }
     </style>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#00897B',
+                        'primary-dark': '#00695C',
+                        secondary: '#E0F2F1',
+                        'primary-foreground': '#ffffff'
+                    },
+                    borderRadius: {
+                        '3xl': '1.5rem',
+                        '4xl': '2rem',
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body class="bg-slate-50">
-    <div id="root">
-        <!-- 네비게이션 -->
-        <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between h-20 items-center">
-                    <div class="flex items-center space-x-2">
-                        <span class="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">K-Hand</span>
-                        <div class="hidden md:block h-6 w-[1px] bg-slate-200 mx-4"></div>
-                        <span class="hidden md:block text-slate-600 font-medium tracking-tight">한국공예치료사 협회</span>
-                    </div>
-                    <div class="hidden md:flex space-x-10 text-slate-600 font-medium">
-                        <a href="#" class="hover:text-emerald-600 transition-colors">협회소개</a>
-                        <a href="#" class="hover:text-emerald-600 transition-colors">교육과정</a>
-                        <a href="#" class="hover:text-emerald-600 transition-colors">자격증안내</a>
-                        <a href="#" class="hover:text-emerald-600 transition-colors">커뮤니티</a>
-                    </div>
-                    <button class="bg-emerald-600 text-white px-6 py-2.5 rounded-full font-bold hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-200 active:scale-95">문의하기</button>
-                </div>
-            </div>
-        </nav>
+<body>
+    <div id="root"></div>
 
-        <!-- 히어로 섹션 -->
-        <header class="hero-bg h-[600px] flex items-center justify-center text-center text-white">
-            <div class="max-w-4xl px-4">
-                <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">손끝에서 피어나는<br/><span class="text-emerald-400">마음의 치유, 공예</span></h1>
-                <p class="text-lg md:text-xl text-slate-200 mb-10 leading-relaxed font-light">한국공예치료사 협회는 공예를 통해 사람의 마음을 어루만지고,<br/>창의적인 일상을 되찾아드리는 전문가를 양성합니다.</p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <button class="bg-white text-emerald-900 px-10 py-4 rounded-xl font-bold text-lg hover:bg-slate-100 transition-all shadow-xl">교육과정 둘러보기</button>
-                    <button class="bg-emerald-600/30 backdrop-blur-md border border-white/30 text-white px-10 py-4 rounded-xl font-bold text-lg hover:bg-white/20 transition-all">협회 소개 영상</button>
-                </div>
-            </div>
-        </header>
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+        const { motion, AnimatePresence } = window.Motion;
 
-        <!-- 핵심 가치 -->
-        <section class="py-24 max-w-7xl mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold text-slate-900 mb-4">공예치료의 목적</h2>
-                <div class="w-16 h-1 bg-emerald-500 mx-auto rounded-full"></div>
-            </div>
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="bg-white p-10 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all group">
-                    <div class="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-emerald-600 transition-colors">
-                        <svg class="w-8 h-8 text-emerald-600 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                    </div>
-                    <h3 class="text-xl font-bold text-slate-900 mb-4">심리적 안정</h3>
-                    <p class="text-slate-600 leading-relaxed italic">"무언가에 몰입하는 과정 자체가 커다란 명상이자 치유가 됩니다."</p>
-                </div>
-                <div class="bg-white p-10 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all group">
-                    <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-blue-600 transition-colors">
-                        <svg class="w-8 h-8 text-blue-600 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                    </div>
-                    <h3 class="text-xl font-bold text-slate-900 mb-4">창의성 발달</h3>
-                    <p class="text-slate-600 leading-relaxed">손을 움직여 나만의 작품을 완성하며 성취감과 숨겨진 창의성을 발견합니다.</p>
-                </div>
-                <div class="bg-white p-10 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all group">
-                    <div class="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-amber-600 transition-colors">
-                        <svg class="w-8 h-8 text-amber-600 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                    </div>
-                    <h3 class="text-xl font-bold text-slate-900 mb-4">사회적 연결</h3>
-                    <p class="text-slate-600 leading-relaxed">함께 만들고 소통하며 사회적 고립감을 해소하고 유대감을 형성합니다.</p>
-                </div>
-            </div>
-        </section>
+        // --- Firebase references from window ---
+        const getFb = () => window.fb || {};
+        
+        // --- Icons Helper ---
+        const Icon = ({ name, size = 24, className = "" }) => {
+            useEffect(() => {
+                if (window.lucide) window.lucide.createIcons();
+            }, [name]);
+            return <i data-lucide={name} className={className} style={{ width: size, height: size, display: 'inline-block' }}></i>;
+        };
 
-        <!-- 푸터 -->
-        <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800">
-            <div class="max-w-7xl mx-auto px-4 text-center md:text-left flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-6 md:mb-0">
-                    <span class="text-2xl font-bold text-white mb-2 block">K-Hand</span>
-                    <p class="text-sm">한국공예치료사 협회 | 대표: 홍길동 | 주소: 서울특별시 OO구 OO로 123</p>
-                    <p class="text-sm mt-1">이메일: khand@khand.org | 전화: 02-1234-5678</p>
+        // --- Constants ---
+        const DEFAULT_GALLERY = [
+            { src: 'https://images.unsplash.com/photo-1513519245088-0e12902e15cb?auto=format&fit=crop&q=80&w=800', title: '한지 공예 램프', category: '자격증' },
+            { src: 'https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?auto=format&fit=crop&q=80&w=800', title: '퀸링 플라워 아트', category: '성인' },
+            { src: 'https://images.unsplash.com/photo-1506806732259-39c2d4a78ae7?auto=format&fit=crop&q=80&w=800', title: '아동 단체 수업', category: '아동' },
+            { src: 'https://images.unsplash.com/photo-1490312278390-ab64016e0aa9?auto=format&fit=crop&q=80&w=800', title: '아기 한복 공예', category: '아동' }
+        ];
+
+        // --- Main Components ---
+
+        const EditModal = ({ isOpen, onClose, title, initialValue, onSave, isNotice = false }) => {
+            const [value, setValue] = useState("");
+            const [noticeData, setNoticeData] = useState({ title: '', badge: '공지', content: '' });
+            const fileInputRef = useRef(null);
+            
+            useEffect(() => {
+                if (isOpen) {
+                    if (isNotice) {
+                        setNoticeData(initialValue || { title: '', badge: '공지', content: '' });
+                    } else {
+                        setValue(initialValue || "");
+                    }
+                }
+            }, [isOpen, initialValue, isNotice]);
+
+            const handleFileUpload = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        const img = new Image();
+                        img.onload = () => {
+                            const canvas = document.createElement('canvas');
+                            let width = img.width;
+                            let height = img.height;
+                            const MAX_DIM = 800;
+                            if (width > height && width > MAX_DIM) { height *= MAX_DIM / width; width = MAX_DIM; }
+                            else if (height > MAX_DIM) { width *= MAX_DIM / height; height = MAX_DIM; }
+                            canvas.width = width; canvas.height = height;
+                            canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+                            setValue(canvas.toDataURL('image/jpeg', 0.6));
+                        };
+                        img.src = reader.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+
+            if (!isOpen) return null;
+            const isImageEdit = title.includes("사진") || title.includes("이미지");
+
+            return (
+                <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] flex items-center justify-center p-6">
+                    <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="bg-white rounded-[32px] p-8 w-full max-w-md shadow-2xl overflow-y-auto max-h-[90vh]">
+                        <div className="flex justify-between items-center mb-6">
+                            <h3 className="text-xl font-bold">{title}</h3>
+                            <button onClick={onClose}><Icon name="x" /></button>
+                        </div>
+                        <div className="space-y-6">
+                            {isNotice ? (
+                                <div className="space-y-4">
+                                    <input value={noticeData.title} onChange={e => setNoticeData({...noticeData, title: e.target.value})} className="w-full bg-slate-50 border rounded-2xl p-4 text-sm font-bold" placeholder="공지 제목" />
+                                    <input value={noticeData.badge} onChange={e => setNoticeData({...noticeData, badge: e.target.value})} className="w-full bg-slate-50 border rounded-2xl p-4 text-sm font-bold" placeholder="배지 (예: 중요)" />
+                                    <textarea value={noticeData.content} onChange={e => setNoticeData({...noticeData, content: e.target.value})} className="w-full bg-slate-50 border rounded-2xl p-4 min-h-[150px] text-sm" placeholder="내용" />
+                                </div>
+                            ) : (
+                                <>
+                                    {isImageEdit && (
+                                        <div className="bg-slate-50 border-2 border-dashed rounded-3xl p-6 text-center">
+                                            <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileUpload} />
+                                            {value.startsWith('data:image') && <img src={value} className="h-32 mx-auto rounded-xl mb-4 object-cover" />}
+                                            <button onClick={() => fileInputRef.current.click()} className="bg-white border px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 mx-auto"><Icon name="plus" size={16}/>사진 선택</button>
+                                        </div>
+                                    )}
+                                    <textarea value={value} onChange={e => setValue(e.target.value)} className="w-full bg-slate-50 border rounded-2xl p-4 text-xs font-mono min-h-[80px]" placeholder="URL 또는 내용" />
+                                </>
+                            ) }
+                            <div className="flex gap-3">
+                                <button onClick={onClose} className="flex-1 py-3 font-bold text-slate-400">취소</button>
+                                <button onClick={() => { onSave(isNotice ? noticeData : value); onClose(); }} className="flex-1 py-3 bg-primary text-white rounded-2xl font-bold shadow-lg">저장</button>
+                            </div>
+                        </div>
+                    </motion.div>
                 </div>
-                <div class="text-sm">
-                    <p>&copy; 2024 한국공예치료사 협회. All rights reserved.</p>
+            );
+        };
+
+        const App = () => {
+            const [user, setUser] = useState(null);
+            const [isAdmin, setIsAdmin] = useState(false);
+            const [scrolled, setScrolled] = useState(false);
+            const [notices, setNotices] = useState([]);
+            const [gallery, setGallery] = useState([]);
+            const [config, setConfig] = useState(null);
+            const [loading, setLoading] = useState(true);
+            
+            // Modal States
+            const [editModal, setEditModal] = useState({ open: false, title: "", value: "", field: "", isNotice: false, isGallery: false, isProgram: false });
+            const [appModalOpen, setAppModalOpen] = useState(false);
+            const [adminViewOpen, setAdminViewOpen] = useState(false);
+            const [noticeDetail, setNoticeDetail] = useState(null);
+
+            useEffect(() => {
+                const handleScroll = () => setScrolled(window.scrollY > 50);
+                window.addEventListener('scroll', handleScroll);
+                
+                // Wait for firebase to be ready if not already
+                const initAuth = () => {
+                    const { auth, onAuthStateChanged } = getFb();
+                    if (!auth) return;
+                    const unsub = onAuthStateChanged(auth, u => {
+                        setUser(u);
+                        setIsAdmin(u?.email === 'rahjinsun76@gmail.com');
+                    });
+                    return unsub;
+                };
+
+                let unsubAuth;
+                if (window.fb) {
+                    unsubAuth = initAuth();
+                } else {
+                    window.addEventListener('firebase-ready', () => { unsubAuth = initAuth(); fetchData(); });
+                }
+                
+                // Fetch Data
+                const fetchData = async () => {
+                    const fb = getFb();
+                    if (!fb.db) return;
+                    try {
+                        const { db, collection, getDocs, getDoc, query, orderBy, doc } = fb;
+                        
+                        const noticeSnap = await getDocs(query(collection(db, 'notices'), orderBy('createdAt', 'desc')));
+                        setNotices(noticeSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+                        
+                        const gallerySnap = await getDocs(query(collection(db, 'gallery'), orderBy('createdAt', 'desc')));
+                        setGallery(gallerySnap.docs.length > 0 ? gallerySnap.docs.map(d => ({ id: d.id, ...d.data() })) : DEFAULT_GALLERY);
+                        
+                        const configSnap = await getDoc(doc(db, 'config', 'main'));
+                        if (configSnap.exists()) setConfig(configSnap.data());
+                    } catch (e) {
+                        console.error("Fetch Error:", e);
+                    } finally {
+                        setLoading(false);
+                        if (window.lucide) window.lucide.createIcons();
+                    }
+                };
+                
+                if (window.fb) fetchData();
+
+                return () => {
+                    window.removeEventListener('scroll', handleScroll);
+                    if (unsubAuth) unsubAuth();
+                };
+            }, []);
+
+            const login = () => {
+                const { auth, googleProvider, signInWithPopup } = getFb();
+                signInWithPopup(auth, googleProvider);
+            };
+            const logout = () => {
+                const { auth, signOut } = getFb();
+                signOut(auth);
+            };
+
+            const saveEdit = async (data) => {
+                const { field, isNotice, isGallery, isProgram } = editModal;
+                const fb = getFb();
+                const { db, collection, addDoc, setDoc, updateDoc, doc, serverTimestamp } = fb;
+                
+                try {
+                    if (isNotice) {
+                        if (field === 'new') {
+                            await addDoc(collection(db, 'notices'), { ...data, date: new Date().toLocaleDateString(), createdAt: serverTimestamp() });
+                        } else {
+                            await updateDoc(doc(db, 'notices', field), { ...data, updatedAt: serverTimestamp() });
+                        }
+                    } else if (isGallery) {
+                        if (field === 'new') {
+                            await addDoc(collection(db, 'gallery'), { src: data, title: '활동 사진', createdAt: serverTimestamp() });
+                        } else {
+                            await updateDoc(doc(db, 'gallery', field), { src: data });
+                        }
+                    } else if (isProgram) {
+                        const pImages = { ...(config?.programImages || {}) };
+                        pImages[field] = data;
+                        await setDoc(doc(db, 'config', 'main'), { programImages: pImages }, { merge: true });
+                    } else {
+                        await setDoc(doc(db, 'config', 'main'), { [field]: data }, { merge: true });
+                    }
+                    window.location.reload();
+                } catch (e) {
+                    console.error("Save Error:", e);
+                    alert("저장 실패: 권한을 확인하세요.");
+                }
+            };
+
+            const deleteItem = async (col, id) => {
+                if (confirm("정말 삭제하시겠습니까?")) {
+                    const fb = getFb();
+                    await fb.deleteDoc(fb.doc(fb.db, col, id));
+                    window.location.reload();
+                }
+            };
+
+            if (loading) {
+                return (
+                    <div className="min-h-screen flex items-center justify-center bg-slate-50">
+                        <div className="text-center">
+                            <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                            <p className="text-slate-400 font-bold">데이터 연결 중...</p>
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="min-h-screen">
+                    <nav className={`fixed w-full z-50 transition-all ${scrolled ? 'bg-white shadow-md py-2' : 'bg-transparent py-4'}`}>
+                        <div className="section-container !py-0 flex justify-between items-center h-16">
+                            <h1 className={`text-xl font-black tracking-tighter ${scrolled ? 'text-primary' : 'text-slate-900 lg:text-primary'}`}>한국공예치료사 협회 K-Hand</h1>
+                            <div className="hidden lg:flex items-center gap-8 font-bold text-sm">
+                                <a href="#mission" className="hover:text-primary">협회소개</a>
+                                <a href="#programs" className="hover:text-primary">프로그램</a>
+                                <a href="#association-gallery" className="hover:text-primary">활동사진</a>
+                                <a href="#notice" className="hover:text-primary">공지사항</a>
+                                <a href="https://mkt.shopping.naver.com/link/6878ed78af62921b08b9bd2c" target="_blank" className="bg-primary text-white px-6 py-2 rounded-xl flex items-center gap-2">쇼핑몰 <Icon name="shopping-bag" size={16}/></a>
+                                {user ? (
+                                    <div className="flex items-center gap-3">
+                                        {isAdmin && <button onClick={() => setAdminViewOpen(true)} className="text-primary"><Icon name="clipboard-list" size={18}/></button>}
+                                        <button onClick={logout} className="text-slate-400"><Icon name="log-out" size={18}/></button>
+                                    </div>
+                                ) : <button onClick={login} className="text-slate-400"><Icon name="user" size={18}/></button>}
+                            </div>
+                        </div>
+                    </nav>
+
+                    <header className="pt-32 pb-20 bg-slate-50 relative overflow-hidden">
+                        <div className="section-container grid lg:grid-cols-2 gap-16 items-center">
+                            <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }}>
+                                <span className="text-primary font-black text-sm tracking-widest uppercase mb-4 block">Healing Craft Art</span>
+                                <h2 className="text-4xl lg:text-5xl font-black mb-8 leading-tight break-keep">손끝에서 피어나는<br/><span className="text-primary italic">치유의 꽃</span></h2>
+                                <p className="text-slate-500 text-lg mb-10 leading-relaxed break-keep">손으로 만드는 즐거움 속에서 마음의 안식을 찾습니다. 전문가와 함께하는 따뜻한 치유의 시간에 당신을 초대합니다.</p>
+                                <div className="flex gap-4">
+                                    <button onClick={() => setAppModalOpen(true)} className="bg-primary text-white px-10 py-5 rounded-2xl font-black shadow-xl shadow-primary/20">교육 신청하기</button>
+                                    <a href="#association-gallery" className="bg-white border border-slate-200 px-10 py-5 rounded-2xl font-bold">갤러리 보기</a>
+                                </div>
+                            </motion.div>
+                            <div className="relative" onClick={() => isAdmin && setEditModal({ open: true, title: "메인 사진 변경", field: "heroImage", value: config?.heroImage })}>
+                                <div className="aspect-[4/5] rounded-[64px] overflow-hidden shadow-2xl bg-slate-200 cursor-pointer group">
+                                    <img src={config?.heroImage || "https://images.unsplash.com/photo-1513519245088-0e12902e15cb?auto=format&fit=crop&q=80&w=800"} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Hero" />
+                                    {isAdmin && <div className="absolute bottom-6 right-6 bg-primary text-white p-4 rounded-full shadow-xl"><Icon name="image" /></div>}
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+
+                    <section id="programs" className="py-24 bg-white">
+                        <div className="section-container">
+                            <div className="text-center mb-20">
+                                <h3 className="text-3xl font-black mb-4">맞춤형 프로그램</h3>
+                                <div className="w-12 h-1 bg-primary mx-auto rounded-full"></div>
+                            </div>
+                            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                                {[
+                                    { id: 1, name: "성인 힐링", desc: "지친 일상의 스트레스 해소", icon: "smile" },
+                                    { id: 2, name: "노인 치유", desc: "인지 자극 및 정서적 안정", icon: "heart" },
+                                    { id: 3, name: "아동 공예", desc: "창의력과 집중력 향상", icon: "baby" },
+                                    { id: 4, name: "자격증 과정", desc: "공예치료 전문가 양성", icon: "graduation-cap" }
+                                ].map(p => (
+                                    <div key={p.id} className="bg-slate-50 p-8 rounded-[40px] border border-slate-100 hover:border-primary/30 transition-all group" onClick={() => isAdmin && setEditModal({ open: true, title: `${p.name} 이미지 변경`, field: p.id, isProgram: true, value: config?.programImages?.[p.id] })}>
+                                        <div className="w-16 h-16 bg-white rounded-3xl flex items-center justify-center text-primary shadow-sm mb-8 group-hover:scale-110 transition-transform">
+                                            <Icon name={p.icon} size={32} />
+                                        </div>
+                                        <h4 className="text-xl font-black mb-3">{p.name}</h4>
+                                        <p className="text-slate-400 font-medium text-sm">{p.desc}</p>
+                                        <div className="mt-6 aspect-video rounded-3xl overflow-hidden bg-slate-200">
+                                            <img src={config?.programImages?.[p.id] || "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=400"} className="w-full h-full object-cover" />
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="association-gallery" className="py-24 bg-slate-50">
+                        <div className="section-container">
+                            <div className="flex justify-between items-end mb-16">
+                                <h3 className="text-3xl font-black">협회 활동 갤러리</h3>
+                                {isAdmin && <button onClick={() => setEditModal({ open: true, title: "활동 사진 추가", field: "new", isGallery: true })} className="bg-primary text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-2"><Icon name="plus" size={20}/> 추가하기</button>}
+                            </div>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                {gallery.map(g => (
+                                    <div key={g.id} className="aspect-square bg-slate-200 rounded-3xl overflow-hidden relative group cursor-pointer" onClick={() => isAdmin && setEditModal({ open: true, title: "사진 수정", field: g.id, isGallery: true, value: g.src })}>
+                                        <img src={g.src} className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
+                                        {isAdmin && <button onClick={(e) => { e.stopPropagation(); deleteItem('gallery', g.id); }} className="absolute top-3 right-3 bg-red-500 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"><Icon name="trash-2" size={16}/></button>}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="notice" className="py-24 bg-white">
+                        <div className="section-container max-w-4xl">
+                            <div className="bg-slate-900 text-white rounded-[40px] p-8 md:p-12 shadow-2xl">
+                                <div className="flex justify-between items-center mb-12">
+                                    <h3 className="text-3xl font-black">공지사항</h3>
+                                    {isAdmin && <button onClick={() => setEditModal({ open: true, title: "새 공지 작성", field: "new", isNotice: true })} className="text-primary font-bold flex items-center gap-2"><Icon name="plus" /> 글쓰기</button>}
+                                </div>
+                                <div className="space-y-6">
+                                    {notices.map(n => (
+                                        <div key={n.id} className="border-b border-white/10 pb-6 flex justify-between items-center cursor-pointer group" onClick={() => setNoticeDetail(n)}>
+                                            <div>
+                                                <span className="text-primary text-[10px] uppercase font-black mb-1 block tracking-wider">{n.badge}</span>
+                                                <h4 className="text-lg font-bold group-hover:text-primary transition-colors">{n.title}</h4>
+                                                <p className="text-[#64748b] text-xs mt-1">{n.date}</p>
+                                            </div>
+                                            {isAdmin && <button onClick={(e) => { e.stopPropagation(); deleteItem('notices', n.id); }} className="text-red-400 p-2"><Icon name="trash-2" size={18}/></button>}
+                                        </div>
+                                    ))}
+                                    {notices.length === 0 && <p className="text-center text-slate-500">등록된 공지사항이 없습니다.</p>}
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <footer className="bg-white py-20 border-t items-center border-slate-100">
+                        <div className="section-container text-center">
+                            <div className="flex justify-center gap-6 mb-12">
+                                <a href="https://blog.naver.com/sewingtherapy" target="_blank" className="w-14 h-14 rounded-full bg-slate-50 flex items-center justify-center hover:bg-primary hover:text-white transition-all"><Icon name="book-open" /></a>
+                                <a href="https://www.instagram.com/korea_hand_healing_art" target="_blank" className="w-14 h-14 rounded-full bg-slate-50 flex items-center justify-center hover:bg-primary hover:text-white transition-all"><Icon name="instagram" /></a>
+                                <a href="tel:01024407666" className="w-14 h-14 rounded-full bg-slate-50 flex items-center justify-center hover:bg-primary hover:text-white transition-all"><Icon name="phone" /></a>
+                            </div>
+                            <p className="text-slate-400 text-sm font-medium mb-2">&copy; 2026 한국공예치료사 협회 K-Hand. All Rights Reserved.</p>
+                            <p className="text-slate-300 text-xs">문의: nanalaa@naver.com | 010-2440-7666 (문자전용)</p>
+                        </div>
+                    </footer>
+
+                    {/* Floating Mall Banner */}
+                    <div className="fixed bottom-0 w-full bg-primary py-4 z-40 lg:hidden">
+                        <a href="https://mkt.shopping.naver.com/link/6878ed78af62921b08b9bd2c" target="_blank" className="flex items-center justify-center gap-2 text-white font-black text-sm">쇼핑몰 바로가기 <Icon name="external-link" size={16}/></a>
+                    </div>
+                    
+                    {/* Modals */}
+                    <EditModal isOpen={editModal.open} onClose={() => setEditModal({ ...editModal, open: false })} title={editModal.title} initialValue={editModal.value} onSave={saveEdit} isNotice={editModal.isNotice} />
+                    
+                    { noticeDetail && (
+                        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] flex items-center justify-center p-6" onClick={() => setNoticeDetail(null)}>
+                            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="bg-white rounded-[40px] p-10 w-full max-w-2xl shadow-2xl overflow-y-auto max-h-[85vh]" onClick={e => e.stopPropagation()}>
+                                <h3 className="text-2xl font-black mb-8 border-b pb-6">{noticeDetail.title}</h3>
+                                <div className="text-slate-600 leading-loose whitespace-pre-wrap">{noticeDetail.content || "상세 내용이 없습니다."}</div>
+                                <button onClick={() => setNoticeDetail(null)} className="mt-12 bg-primary text-white w-full py-4 rounded-2xl font-bold">닫기</button>
+                            </motion.div>
+                        </div>
+                    )}
+
+                    { appModalOpen && (
+                        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] flex items-center justify-center p-6">
+                            <div className="bg-white rounded-[40px] p-10 w-full max-w-lg shadow-2xl flex flex-col gap-6" onClick={e => e.stopPropagation()}>
+                                <div className="flex justify-between items-center"><h3 className="text-2xl font-black">교육 신청</h3><button onClick={() => setAppModalOpen(false)}><Icon name="x"/></button></div>
+                                <p className="text-slate-500 break-keep">현재 교육 신청은 유선 또는 문자로 접수받고 있습니다. 아래 번호로 연락주시면 친절히 안내해 드립니다.</p>
+                                <div className="bg-slate-50 p-6 rounded-3xl text-center">
+                                    <p className="text-slate-400 font-bold text-xs mb-1">상담 및 신청 예약</p>
+                                    <p className="text-3xl font-black text-primary">010-2440-7666</p>
+                                    <p className="text-slate-400 text-xs mt-1">(문자 또는 전화 가능)</p>
+                                </div>
+                                <button onClick={() => setAppModalOpen(false)} className="bg-primary text-white py-4 rounded-2xl font-bold">확인</button>
+                            </div>
+                        </div>
+                    ) }
                 </div>
-            </div>
-        </footer>
-    </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
 </body>
 </html>
+
