@@ -451,9 +451,24 @@ const Hero = ({ config, onEditImage }: { config: any, onEditImage: (field: strin
                 Korea-Hand Healing Art
               </span>
             </div>
-            <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-8 leading-[1.1] text-slate-900 break-keep">
-              공예치료 전문,<br />
-              <span className="text-primary italic">한국공예치료사 협회</span>
+            <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-8 leading-[1.1] text-slate-900 break-keep overflow-hidden">
+              <motion.div
+                initial={{ x: -150, opacity: 0, filter: "blur(15px)" }}
+                whileInView={{ x: 0, opacity: 1, filter: "blur(0px)" }}
+                viewport={{ once: true }}
+                transition={{ duration: 2.5, ease: [0.22, 1, 0.36, 1] }}
+              >
+                공예치료 · 바느질치료
+              </motion.div>
+              <motion.div
+                initial={{ x: -150, opacity: 0, filter: "blur(15px)" }}
+                whileInView={{ x: 0, opacity: 1, filter: "blur(0px)" }}
+                viewport={{ once: true }}
+                transition={{ duration: 2.5, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
+                className="text-primary italic mt-1"
+              >
+                한국공예치료사협회
+              </motion.div>
             </h1>
             <p className="text-base md:text-lg text-slate-600 mb-10 leading-relaxed max-w-lg break-keep">
               공예치료를 통해 나를 만나는 시간.<br />
@@ -470,14 +485,14 @@ const Hero = ({ config, onEditImage }: { config: any, onEditImage: (field: strin
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, scale: 0.9, y: 30 }}
+            whileInView={{ opacity: 1, scale: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 1 }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
             className="relative"
           >
             <motion.div 
-              animate={{ y: [0, -20, 0] }}
+              animate={{ y: [0, -15, 0] }}
               transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
               className={`aspect-[4/5] md:aspect-square rounded-[40px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.1)] relative bg-slate-100 flex items-center justify-center border-4 border-dashed border-slate-200 ${onEditImage ? 'cursor-pointer' : ''}`}
               onClick={() => onEditImage && onEditImage('heroImage')}
@@ -571,9 +586,10 @@ const About = ({ config, onEditImage }: { config: any, onEditImage: (field: stri
 
             <div className="relative group">
               <motion.div 
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0, scale: 0.95, y: 40 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
                 viewport={{ once: true }}
+                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
                 className={`aspect-video lg:aspect-square bg-slate-100 rounded-[48px] overflow-hidden shadow-2xl border-[16px] border-white relative ${onEditImage ? 'cursor-pointer' : ''}`}
                 onClick={() => onEditImage && onEditImage('aboutImage')}
               >
@@ -665,7 +681,11 @@ const Programs = ({ config, onEditProgramImage }: { config: any, onEditProgramIm
                     </div>
                   </div>
                   
-                  <div 
+                  <motion.div 
+                    initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                    whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
                     className={`w-full md:w-72 aspect-[4/3] rounded-3xl overflow-hidden relative shadow-xl group ${onEditProgramImage ? 'cursor-pointer' : ''}`}
                     onClick={() => onEditProgramImage && onEditProgramImage(item.id)}
                   >
@@ -687,7 +707,7 @@ const Programs = ({ config, onEditProgramImage }: { config: any, onEditProgramIm
                         </div>
                       </div>
                     )}
-                  </div>
+                  </motion.div>
                 </div>
               </motion.div>
             ))}
@@ -752,9 +772,10 @@ const Certification = ({ config, onEditImage, onOpenApply, isAdmin, onOpenAdminV
             
             <div className="flex-1 w-full max-w-lg">
                 <motion.div 
-                   initial={{ opacity: 0, x: 30 }}
-                   whileInView={{ opacity: 1, x: 0 }}
+                   initial={{ opacity: 0, scale: 0.9, x: 40 }}
+                   whileInView={{ opacity: 1, scale: 1, x: 0 }}
                    viewport={{ once: true }}
+                   transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
                    className="aspect-square relative bg-slate-100 cursor-pointer group"
                    onClick={() => onEditImage && onEditImage('certificationImage')}
                 >
@@ -1212,9 +1233,10 @@ const Mission = ({ config, onEditImage }: { config: any, onEditImage: (field: st
         <div className="grid lg:grid-cols-2 gap-20 items-center">
           <div className="relative group">
             <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, scale: 0.95, x: -40 }}
+              whileInView={{ opacity: 1, scale: 1, x: 0 }}
               viewport={{ once: true }}
+              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
               className={`aspect-[4/3] rounded-[48px] overflow-hidden shadow-2xl relative ${onEditImage ? 'cursor-pointer' : ''}`}
               onClick={() => onEditImage && onEditImage('missionImage')}
             >
@@ -1334,9 +1356,10 @@ const Contact = ({ config, onEditImage }: { config: any, onEditImage?: (field: s
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, scale: 0.95, y: 40 }}
+              whileInView={{ opacity: 1, scale: 1, y: 0 }}
               viewport={{ once: true }}
+              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
               className="relative group"
             >
                <div className="aspect-square bg-white p-4 rounded-[64px] shadow-2xl relative overflow-hidden">
