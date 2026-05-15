@@ -452,12 +452,12 @@ const Hero = ({ config, onEditImage }: { config: any, onEditImage: (field: strin
               </span>
             </div>
             <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-8 leading-[1.1] text-slate-900 break-keep">
-              손끝에서 피어나는<br />
-              <span className="text-primary italic">치유의 꽃</span>
+              공예치료 전문,<br />
+              <span className="text-primary italic">한국공예치료사 협회</span>
             </h1>
             <p className="text-base md:text-lg text-slate-600 mb-10 leading-relaxed max-w-lg break-keep">
-              온전한 나를 만나는 공예 시간.<br />
-              마음을 보듬고 삶의 온기를 더하는 공예치료 전문가들이 함께합니다.
+              공예치료를 통해 나를 만나는 시간.<br />
+              한국공예치료사 협회가 당신의 마음을 보듬고 삶의 위안을 더합니다.
             </p>
             <div className="flex flex-wrap gap-4">
               <a href="#association-gallery" className="bg-primary text-white px-10 py-5 rounded-2xl font-bold shadow-lg shadow-primary/20 hover:shadow-xl hover:translate-y-[-2px] transition-all flex items-center gap-2 text-base cursor-pointer">
@@ -483,18 +483,22 @@ const Hero = ({ config, onEditImage }: { config: any, onEditImage: (field: strin
               onClick={() => onEditImage && onEditImage('heroImage')}
             >
               {config?.heroImage ? (
-                <img 
+                <motion.img 
                   src={config.heroImage || undefined} 
                   alt="공예치료 실습" 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
                 />
               ) : (
-                <img 
+                <motion.img 
                   src={heroImg} 
                   alt="공예치료 전시" 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
                 />
               )}
               <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 to-transparent pointer-events-none" />
@@ -517,7 +521,7 @@ const Hero = ({ config, onEditImage }: { config: any, onEditImage: (field: strin
                   <Heart className="text-yellow-400" fill="currentColor" size={24} />
                   <span className="font-bold text-lg">Healing Focus</span>
                </div>
-               <p className="text-white/70 text-sm leading-relaxed break-keep">언어로 표현하기 힘든 감정을<br />손작업을 통해 솔직하게 마주합니다.</p>
+               <p className="text-white/70 text-sm leading-relaxed break-keep">말로 다 전하지 못한 감정을<br />손작업을 통해 천천히 마주합니다.</p>
             </div>
           </motion.div>
        </div>
@@ -568,16 +572,16 @@ const About = ({ config, onEditImage }: { config: any, onEditImage: (field: stri
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                animate={{ y: [0, 15, 0] }}
-                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                 className={`aspect-video lg:aspect-square bg-slate-100 rounded-[48px] overflow-hidden shadow-2xl border-[16px] border-white relative ${onEditImage ? 'cursor-pointer' : ''}`}
                 onClick={() => onEditImage && onEditImage('aboutImage')}
               >
-                 <img 
+                 <motion.img 
                    src={config?.aboutImage || "https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?auto=format&fit=crop&q=80&w=800"} 
                    className="w-full h-full object-cover" 
                    referrerPolicy="no-referrer" 
-                   alt="공예 도구와 재료" 
+                   alt="공예 도구와 재료"
+                   animate={{ scale: [1, 1.1, 1] }}
+                   transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
                  />
                  {onEditImage && (
                     <div className="absolute bottom-6 right-6 bg-primary text-white p-4 rounded-full shadow-2xl flex items-center gap-2 font-bold text-sm">
@@ -596,87 +600,92 @@ const About = ({ config, onEditImage }: { config: any, onEditImage: (field: stri
 };
 
 const Programs = ({ config, onEditProgramImage }: { config: any, onEditProgramImage: (id: number) => void }) => {
-  const targets = [
+  const programs = [
     {
       id: 1,
-      title: "성인 힐링",
-      image: config?.programImages?.[1] || "https://images.unsplash.com/photo-1513519245088-0e12902e15cb?auto=format&fit=crop&q=80&w=600",
-      desc: "스트레스 완화 및 힐링",
-      icon: <Smile size={32} />
+      title: "성인대상",
+      bullets: ["스트레스 완화", "감정회복", "자기돌봄", "임산부 태교"],
+      image: config?.programImages?.[1] || "https://images.unsplash.com/photo-1605722243979-fe0be8158232?auto=format&fit=crop&q=80&w=600",
     },
     {
       id: 2,
-      title: "노인 실버",
-      image: config?.programImages?.[2] || "https://images.unsplash.com/photo-1581579438747-1dc8c17bbce4?auto=format&fit=crop&q=80&w=600",
-      desc: "인지 자극 및 정서 안정",
-      icon: <Heart size={28} />
+      title: "노인대상",
+      bullets: ["기억회상", "치매예방", "우울감 완화"],
+      image: config?.programImages?.[2] || "https://images.unsplash.com/photo-1513519245088-0e12902e15cb?auto=format&fit=crop&q=80&w=600",
     },
     {
       id: 3,
-      title: "아동 창의",
+      title: "아동대상",
+      bullets: ["정서적 안정", "자기조절", "사회성 향상 및 관계형성", "자신감 향상"],
       image: config?.programImages?.[3] || "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&q=80&w=600",
-      desc: "집중력 및 창의력 향상",
-      icon: <Baby size={32} />
     },
     {
       id: 4,
-      title: "전문가 과정",
+      title: "기관 맞춤형 출강 프로그램",
+      bullets: ["기업", "문화센터", "복지관 & 요양원", "학교 & 단체"],
       image: config?.programImages?.[4] || "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=800",
-      desc: "자격증 취득 및 전문가 양성",
-      icon: <GraduationCap size={32} />
     }
   ];
 
   return (
     <section id="programs" className="bg-white py-24">
       <div className="section-container">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-          <div>
-            <h2 className="text-primary font-bold mb-4">Programming</h2>
-            <h3 className="text-2xl md:text-3xl font-bold">대상별 맞춤형 프로그램</h3>
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-20">
+            <h2 className="text-primary font-bold mb-4 tracking-widest uppercase text-sm">Programming</h2>
+            <h3 className="text-3xl md:text-4xl font-bold text-slate-900 break-keep">대상별 맞춤형 프로그램</h3>
           </div>
-          <p className="text-slate-500 max-w-sm text-right break-keep">
-            각 대상의 특성을 고려하여 체계적으로 설계된 치유 커리큘럼을 제공합니다.
-          </p>
-        </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {targets.map((target, idx) => (
-            <motion.div
-              key={target.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              whileHover={{ y: -10 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.1 }}
-              className="group bg-white border border-slate-100 rounded-[32px] overflow-hidden hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 transition-all"
-            >
-              <div className="p-8 pb-0">
-                <div className="w-16 h-16 bg-secondary rounded-2xl flex items-center justify-center text-primary mb-6">
-                  {target.icon}
-                </div>
-                <h4 className="text-xl sm:text-2xl font-bold mb-2 tracking-tight break-keep">{target.title}</h4>
-                <p className="text-slate-500 text-[13px] leading-relaxed break-keep mb-6">{target.desc}</p>
-              </div>
-              <div 
-                className={`aspect-[4/3] w-[90%] mx-auto mb-8 rounded-2xl overflow-hidden relative ${onEditProgramImage ? 'cursor-pointer' : ''}`}
-                onClick={() => onEditProgramImage && onEditProgramImage(target.id)}
+          <div className="space-y-12">
+            {programs.map((item, idx) => (
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
               >
-                <img 
-                  src={target.image || undefined} 
-                  alt={target.title} 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  referrerPolicy="no-referrer"
-                />
-                {onEditProgramImage && (
-                  <div className="absolute bottom-3 right-3 p-3 bg-primary text-white rounded-xl shadow-lg border border-white/20 flex items-center gap-2 font-bold text-xs">
-                    <ImageIcon size={14} />
-                    <span>사진 변경</span>
+                <div className="flex flex-col md:flex-row items-start gap-8 md:gap-16 pb-12 border-b border-slate-100 last:border-0 last:pb-0">
+                  <div className="flex items-start gap-8 flex-1">
+                    <span className="text-7xl font-black text-[#004D40] leading-none opacity-90">{item.id}</span>
+                    <div className="pt-2">
+                       <h4 className="text-2xl font-extrabold text-slate-900 mb-6 break-keep">{item.title}</h4>
+                       <ul className="space-y-3">
+                          {item.bullets.map((bullet, bi) => (
+                            <li key={bi} className="flex items-center gap-3 text-slate-600 font-medium whitespace-nowrap">
+                               <div className="w-1.5 h-1.5 bg-[#004D40] rounded-full shrink-0" />
+                               <span className="text-lg break-keep">{bullet}</span>
+                            </li>
+                          ))}
+                       </ul>
+                    </div>
                   </div>
-                )}
-              </div>
-            </motion.div>
-          ))}
+                  
+                  <div 
+                    className={`w-full md:w-72 aspect-[4/3] rounded-3xl overflow-hidden relative shadow-xl group ${onEditProgramImage ? 'cursor-pointer' : ''}`}
+                    onClick={() => onEditProgramImage && onEditProgramImage(item.id)}
+                  >
+                    <motion.img 
+                      src={item.image} 
+                      alt={item.title} 
+                      className="w-full h-full object-cover transition-transform duration-700"
+                      referrerPolicy="no-referrer"
+                      animate={{ scale: [1, 1.1, 1] }}
+                      transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+                      whileHover={{ scale: 1.05 }}
+                    />
+                    {onEditProgramImage && (
+                      <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <div className="bg-white/90 backdrop-blur-sm p-3 rounded-2xl flex items-center gap-2 font-bold text-xs text-primary shadow-xl">
+                           <ImageIcon size={16} /> 사진 변경
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -743,11 +752,13 @@ const Certification = ({ config, onEditImage, onOpenApply, isAdmin, onOpenAdminV
                    className="aspect-square relative bg-slate-100 cursor-pointer group"
                    onClick={() => onEditImage && onEditImage('certificationImage')}
                 >
-                   <img 
+                   <motion.img 
                     src={config?.certificationImage || "https://images.unsplash.com/photo-1513519245088-0e12902e15cb?auto=format&fit=crop&q=80&w=800"} 
                     className="w-full h-full object-cover rounded-[56px]" 
                     referrerPolicy="no-referrer" 
-                    alt="자격증 과정 실습" 
+                    alt="자격증 과정 실습"
+                    animate={{ scale: [1, 1.1, 1] }}
+                    transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
                    />
                    {onEditImage && (
                     <div className="absolute bottom-6 right-6 bg-primary text-white p-4 rounded-full shadow-2xl flex items-center gap-2 font-bold text-sm">
@@ -791,11 +802,14 @@ const Gallery = ({ items, isAdmin, onDelete, onEdit, onAdd, user, onLogin }: { i
               className="aspect-square rounded-2xl overflow-hidden cursor-pointer relative group bg-slate-100"
               onClick={() => isAdmin && onEdit(img)}
             >
-               <img 
+               <motion.img 
                  src={img.src || undefined} 
-                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                 className="w-full h-full object-cover" 
                  referrerPolicy="no-referrer" 
-                 alt={img.title || "협회 활동 사진"} 
+                 alt={img.title || "협회 활동 사진"}
+                 animate={{ scale: [1, 1.1, 1] }}
+                 transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+                 whileHover={{ scale: 1.1 }}
                />
                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <span className="text-white font-bold border-2 border-white px-4 py-2">{img.title}</span>
@@ -1110,22 +1124,27 @@ const Notice = ({
     <section id="notice" className="bg-slate-50 py-24">
       <div className="section-container">
         <div className="max-w-4xl mx-auto shadow-2xl bg-white rounded-[40px] overflow-hidden transition-all duration-500">
-            <div className="bg-primary p-6 sm:p-10 flex justify-between items-center text-white">
+            <div className="bg-primary p-6 sm:p-10 flex flex-wrap justify-between items-center text-white gap-4">
                 <div className="flex items-center gap-2 sm:gap-6">
                   <h2 className="text-2xl sm:text-3xl font-bold whitespace-nowrap">공지사항</h2>
-                  {isAdmin && (
+                  {isAdmin ? (
                     <button 
                       onClick={onAdd}
-                      className="bg-white/20 hover:bg-white/30 p-2 rounded-xl transition-colors flex items-center gap-1 text-sm font-bold"
+                      className="bg-white text-primary hover:bg-white/90 px-4 py-2 rounded-xl transition-all flex items-center gap-2 text-sm font-black shadow-lg"
                     >
-                      <Plus size={18} />
-                      <span>글쓰기</span>
+                      <Plus size={20} />
+                      <span>새 공지 등록</span>
                     </button>
+                  ) : (
+                    <div className="hidden sm:flex items-center gap-2 text-white/60 text-xs font-medium bg-black/10 px-3 py-1.5 rounded-full">
+                      <ClipboardList size={14} />
+                      <span>협회 소식 및 안내</span>
+                    </div>
                   )}
                 </div>
                 <button 
                   onClick={() => setShowAll(!showAll)}
-                  className="flex items-center gap-2 text-sm font-bold opacity-80 hover:opacity-100 transition-all"
+                  className="flex items-center gap-2 text-sm font-black bg-white/10 hover:bg-white/20 px-4 py-2 rounded-xl transition-all"
                 >
                     {showAll ? '접기' : '전체보기'} <ChevronRight size={16} className={`transition-transform ${showAll ? 'rotate-90' : ''}`} />
                 </button>
@@ -1143,21 +1162,24 @@ const Notice = ({
                         </div>
                         <div className="flex items-center gap-4">
                           <span className="text-slate-400 font-medium text-sm">{item.date}</span>
-                          {isAdmin && item.id && (
-                            <div className="flex gap-2">
+                          {isAdmin && (
+                            <div className="flex gap-1">
                                <button 
                                 onClick={(e) => { e.stopPropagation(); onEdit(item); }}
-                                className="text-blue-400 hover:text-blue-600 p-2 transform hover:scale-125 transition-all"
+                                className="p-2 text-slate-300 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-all"
                                 title="수정"
                               >
-                                <Edit size={16} />
+                                <Edit size={18} />
                               </button>
                               <button 
-                                onClick={(e) => { e.stopPropagation(); onDelete(item.id); }}
-                                className="text-red-400 hover:text-red-600 p-2 transform hover:scale-125 transition-all"
+                                onClick={(e) => { 
+                                  e.stopPropagation(); 
+                                  onDelete(item.id || item.title); 
+                                }}
+                                className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
                                 title="삭제"
                               >
-                                <Trash2 size={16} />
+                                <Trash2 size={18} />
                               </button>
                             </div>
                           )}
@@ -1174,125 +1196,107 @@ const Notice = ({
 };
 
 const Mission = ({ config, onEditImage }: { config: any, onEditImage: (field: string) => void }) => {
-    return (
-      <section id="mission" className="bg-[#003d33] py-24 text-white overflow-hidden">
-        <div className="section-container relative">
-          <div className="grid lg:grid-cols-2 gap-20 items-center">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                animate={{ x: [0, 10, 0] }}
-                transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-                className="relative group cursor-pointer"
-                onClick={() => onEditImage && onEditImage('missionImage')}
-              >
-                 <div className="aspect-[4/3] rounded-[64px] overflow-hidden shadow-2xl bg-slate-100 relative">
-                    <img src={config?.missionImage || "https://images.unsplash.com/photo-1582213726894-4710189d2824?auto=format&fit=crop&q=80&w=800"} className="w-full h-full object-cover" referrerPolicy="no-referrer" alt="공예 협회 활동" />
-                    {onEditImage && (
-                      <div className="absolute bottom-6 right-6 bg-primary text-white p-4 rounded-full shadow-2xl flex items-center gap-2 font-bold text-sm">
-                        <ImageIcon size={20} />
-                        <span>사진 변경</span>
-                      </div>
-                    )}
-                 </div>
-                 <div className="absolute -top-10 -left-10 w-40 h-40 bg-primary/20 blur-3xl -z-10" />
-              </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
+  return (
+    <section id="mission" className="bg-[#004D40] py-24 text-white overflow-hidden">
+      <div className="section-container">
+        <div className="grid lg:grid-cols-2 gap-20 items-center">
+          <div className="relative group">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
+              className={`aspect-[4/3] rounded-[48px] overflow-hidden shadow-2xl relative ${onEditImage ? 'cursor-pointer' : ''}`}
+              onClick={() => onEditImage && onEditImage('missionImage')}
             >
-              <h2 className="text-primary/60 font-bold mb-4 tracking-tighter text-lg">About Us</h2>
-              <h3 className="text-2xl md:text-4xl font-black mb-8 leading-tight break-keep">
-                협회 소개
-              </h3>
-              <p className="text-lg text-white/70 mb-12 leading-loose break-keep">
-                한국공예치료사 협회는 공예를 통해 사람의 마음을 돌보고, 삶의 온기를 회복하는 치유의 시간을 만들어갑니다.
-              </p>
-              
-              <div className="space-y-6">
-                {[
-                  "전문적인 공예치료 커리큘럼 연구 및 개발",
-                  "취약계층을 위한 정서 지원 봉사 활동",
-                  "자격증 교육을 통한 경단녀 및 청년 일자리 창출"
-                ].map((item, idx) => (
-                    <div key={idx} className="flex gap-4 p-4 border border-white/10 rounded-2xl hover:bg-white/5 transition-colors">
-                        <div className="text-primary font-black text-2xl">0{idx+1}</div>
-                        <p className="font-bold break-keep">{item}</p>
-                    </div>
-                ))}
-              </div>
+               <motion.img 
+                 src={config?.missionImage || "https://images.unsplash.com/photo-1544411047-c491e34a2450?auto=format&fit=crop&q=80&w=800"} 
+                 className="w-full h-full object-cover" 
+                 referrerPolicy="no-referrer" 
+                 alt="협회 소개 사진"
+                 animate={{ scale: [1, 1.1, 1] }}
+                 transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+               />
+               {onEditImage && (
+                  <div className="absolute bottom-6 right-6 bg-primary text-white p-4 rounded-full shadow-2xl flex items-center gap-2 font-bold text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                    <ImageIcon size={20} />
+                    <span>사진 변경</span>
+                  </div>
+               )}
             </motion.div>
+            <div className="absolute -top-10 -left-10 w-40 h-40 bg-primary/20 blur-3xl -z-10" />
           </div>
+          
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-secondary font-bold mb-4 tracking-widest text-sm uppercase">About Us</h2>
+            <h3 className="text-3xl md:text-5xl font-black mb-8 leading-tight break-keep">
+              협회 소개
+            </h3>
+            <p className="text-lg text-white/80 mb-12 leading-relaxed break-keep">
+              한국공예치료사 협회는 공예를 통해 사람의 마음을 돌보고, 삶의 온기를 회복하는 치유의 시간을 만들어갑니다.
+            </p>
+            
+            <div className="space-y-4">
+              {[
+                "공예치료 전문 인재 양성",
+                "감정회복 중심 프로그램 개발",
+                "아동 성인 노인대상 치유프로그램 연구",
+                "지역 사회 정서회복 활동",
+                "한국형 공예치료 콘텐츠 개발"
+              ].map((item, idx) => (
+                <div key={idx} className="flex items-center gap-3">
+                  <div className="w-1.5 h-1.5 bg-primary rounded-full shrink-0" />
+                  <p className="font-medium text-white/90 text-lg break-keep">{item}</p>
+                </div>
+              ))}
+            </div>
+          </motion.div>
         </div>
-      </section>
-    );
-  };
+      </div>
+    </section>
+  );
+};
 
 const Contact = ({ config, onEditImage }: { config: any, onEditImage?: (field: string) => void }) => {
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    message: ''
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.name || !formData.phone) {
-      alert("이름과 연락처는 필수입력 항목입니다.");
-      return;
-    }
-    setIsSubmitting(true);
-    try {
-      await addApplication({ ...formData, email: '', program: '기타/문의' });
-      alert("신청이 성공적으로 완료되었습니다. 곧 담당자가 연락드리겠습니다.");
-      setFormData({ name: '', phone: '', message: '' });
-    } catch (err) {
-      alert("신청 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
-      console.error(err);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   return (
-    <section id="contact" className="bg-white py-24">
+    <section id="contact" className="bg-slate-50 py-24">
       <div className="section-container">
-        <div className="grid lg:grid-cols-2 gap-16 items-start">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-3xl md:text-5xl font-black mb-6 text-slate-900 tracking-tight break-keep">궁금하신 점이 있나요?</h2>
+              <h2 className="text-3xl md:text-5xl font-black mb-6 text-slate-900 tracking-tight break-keep">문의 & 상담</h2>
               <p className="text-lg text-slate-500 mb-12 leading-relaxed break-keep">
-                교육과정, 자격증, 출강 문의 등 언제든 환영합니다.
+                궁금하신 점이 있다면 편하게 연락주세요.<br />
+                전문 담당자가 친절하게 안내해 드립니다.
               </p>
               
               <div className="space-y-6">
-                 <div className="flex items-center gap-6 p-6 rounded-3xl bg-slate-50/50 border border-slate-100 group hover:border-primary transition-all">
-                    <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
+                 <div className="flex items-center gap-6 p-6 rounded-3xl bg-white border border-slate-100 shadow-sm">
+                    <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
                        <Phone size={28} />
                     </div>
                     <div>
-                      <p className="text-xs text-slate-400 font-bold mb-1 uppercase tracking-widest">PHONE</p>
-                      <div className="flex flex-wrap items-center gap-x-3">
-                        <p className="text-3xl font-black tracking-tight text-slate-900">010-2440-7666</p>
-                        <span className="text-sm font-black text-primary bg-primary/10 px-3 py-1 rounded-lg animate-pulse">문자전용</span>
+                      <p className="text-xs text-slate-400 font-bold mb-1">전화</p>
+                      <div className="flex items-center gap-3">
+                        <p className="text-2xl font-black text-slate-900">010-2440-7666</p>
+                        <span className="text-sm text-slate-400 font-medium">(문자전용)</span>
                       </div>
                     </div>
                  </div>
                  
-                 <div className="flex items-center gap-6 p-6 rounded-3xl bg-slate-50/50 border border-slate-100 group hover:border-primary transition-all">
-                    <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
+                 <div className="flex items-center gap-6 p-6 rounded-3xl bg-white border border-slate-100 shadow-sm">
+                    <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
                        <Mail size={28} />
                     </div>
                     <div>
-                      <p className="text-xs text-slate-400 font-bold mb-1 uppercase tracking-widest">E-MAIL</p>
-                      <p className="text-xl font-bold tracking-tight text-slate-800">nanalaa@naver.com</p>
+                      <p className="text-xs text-slate-400 font-bold mb-1">이메일</p>
+                      <p className="text-xl font-bold text-slate-800">nanalaa@naver.com</p>
                     </div>
                  </div>
 
@@ -1301,61 +1305,53 @@ const Contact = ({ config, onEditImage }: { config: any, onEditImage?: (field: s
                       href="https://blog.naver.com/sewingtherapy" 
                       target="_blank" 
                       rel="noreferrer"
-                      className="w-16 h-16 bg-slate-100 rounded-3xl flex items-center justify-center text-slate-600 hover:bg-[#2DB400] hover:text-white transition-all shadow-sm group/sns"
+                      className="w-14 h-14 bg-white border border-slate-100 rounded-2xl flex items-center justify-center text-slate-600 hover:text-primary transition-all shadow-sm"
                       title="네이버 블로그"
                     >
-                        <BookOpen size={28} className="group-hover/sns:scale-110 transition-transform" />
+                        <BookOpen size={24} />
                     </a>
                     <a 
                       href="https://www.instagram.com/korea_hand_healing_art?igsh=cDl0cGFkN2twd2l6" 
                       target="_blank" 
                       rel="noreferrer"
-                      className="w-16 h-16 bg-slate-100 rounded-3xl flex items-center justify-center text-slate-600 hover:bg-gradient-to-tr hover:from-[#F58529] hover:to-[#D12856] hover:text-white transition-all shadow-sm group/sns"
+                      className="w-14 h-14 bg-white border border-slate-100 rounded-2xl flex items-center justify-center text-slate-600 hover:text-primary transition-all shadow-sm"
                       title="인스타그램"
                     >
-                        <Instagram size={28} className="group-hover/sns:scale-110 transition-transform" />
+                        <Instagram size={24} />
                     </a>
                  </div>
               </div>
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              className="bg-slate-50/50 rounded-[40px] p-8 md:p-12 border border-slate-100"
+              className="relative group"
             >
-               <h4 className="text-2xl font-bold text-center mb-10">교육 상담 신청</h4>
-               <form onSubmit={handleSubmit} className="space-y-5">
-                  <input 
-                    type="text" 
-                    placeholder="성함 (필수)" 
-                    value={formData.name}
-                    onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    className="w-full bg-white border border-slate-200 rounded-2xl p-5 text-sm focus:ring-2 focus:ring-primary focus:outline-none transition-all shadow-sm"
-                  />
-                  <input 
-                    type="tel" 
-                    placeholder="연락처 (필수)" 
-                    value={formData.phone}
-                    onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                    className="w-full bg-white border border-slate-200 rounded-2xl p-5 text-sm focus:ring-2 focus:ring-primary focus:outline-none transition-all shadow-sm"
-                  />
-                  <textarea 
-                    placeholder="문의 내용" 
-                    value={formData.message}
-                    onChange={(e) => setFormData({...formData, message: e.target.value})}
-                    rows={4}
-                    className="w-full bg-white border border-slate-200 rounded-2xl p-5 text-sm focus:ring-2 focus:ring-primary focus:outline-none transition-all shadow-sm resize-none"
-                  />
-                  <button 
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full bg-primary text-white py-5 rounded-2xl font-bold text-lg hover:bg-primary-dark transition-all disabled:bg-slate-300 shadow-lg shadow-primary/20"
-                  >
-                    {isSubmitting ? "전송 중..." : "신청서 보내기"}
-                  </button>
-               </form>
+               <div className="aspect-square bg-white p-4 rounded-[64px] shadow-2xl relative overflow-hidden">
+                  <div className="w-full h-full rounded-[48px] overflow-hidden relative">
+                    <motion.img 
+                      src={config?.contactImage || "https://images.unsplash.com/photo-1544411047-c491e34a2450?auto=format&fit=crop&q=80&w=800"} 
+                      className="w-full h-full object-cover" 
+                      referrerPolicy="no-referrer" 
+                      alt="상담 안내 이미지"
+                      animate={{ scale: [1, 1.1, 1] }}
+                      transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+                    />
+                    {onEditImage && (
+                      <div 
+                        onClick={() => onEditImage('contactImage')}
+                        className="absolute bottom-6 right-6 bg-[#004D40] text-white px-4 py-2 rounded-full shadow-2xl cursor-pointer flex items-center gap-2 font-bold text-xs"
+                      >
+                        <ImageIcon size={16} />
+                        <span>메인 사진 변경</span>
+                      </div>
+                    )}
+                  </div>
+               </div>
+               {/* Decorative floating balls */}
+               <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl -z-10" />
             </motion.div>
         </div>
       </div>
@@ -1464,9 +1460,17 @@ export default function App() {
 
   const handleDeleteNotice = async (id: string) => {
     if (confirm("정말 이 공지를 삭제하시겠습니까?")) {
-      await deleteNotice(id);
-      const n = await getNotices();
-      setNotices(n);
+      try {
+        // Only call deleteNotice if it's a Firestore document ID (usually 20 chars)
+        if (id && id.length > 10) {
+          await deleteNotice(id);
+        }
+        // Always update local state to reflect deletion
+        setNotices(prev => prev.filter(n => (n.id || n.title) !== id));
+      } catch (err) {
+        console.error("Failed to delete notice", err);
+        alert("삭제에 실패했습니다. 다시 시도해주세요.");
+      }
     }
   };
 
