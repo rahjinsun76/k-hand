@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>한국공예치료사협회 K-Hand</title>
+    <link>https://공예치료.art/</link>
+    <description>한국공예치료사협회 | 공예치료 및 바느질치료 전문가 양성, 자격증 취득 및 심리치유 프로그램 운영 안내.</description>
+    <language>ko-KR</language>
+    <item>
+      <title>공예치료 전문가 과정 안내</title>
+      <link>https://공예치료.art/#certification</link>
+      <description>전문 공예치료사 자격증 취득을 위한 커리큘럼 및 실습 안내</description>
+      <pubDate>Wed, 13 May 2026 00:00:00 +0900</pubDate>
+    </item>
+  </channel>
+</rss>
