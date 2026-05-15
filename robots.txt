@@ -6,4 +6,4 @@ Allow: /
 
 User-agent: *
 Allow: /
-Sitemap: https://공예치료.art/sitemap.xml
+Sitemap: https://xn--hc0bu8c43it2n.art/sitemap.xml
