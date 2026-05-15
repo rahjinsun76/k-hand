@@ -485,18 +485,20 @@ const Hero = ({ config, onEditImage }: { config: any, onEditImage: (field: strin
               {config?.heroImage ? (
                 <motion.img 
                   src={config.heroImage || undefined} 
-                  alt="공예치료 실습" 
+                  alt="한국공예치료사협회 공예치료 전문가 실습" 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
+                  decoding="async"
                   animate={{ scale: [1, 1.1, 1] }}
                   transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
                 />
               ) : (
                 <motion.img 
                   src={heroImg} 
-                  alt="공예치료 전시" 
+                  alt="한국공예치료사협회 공예치료 프로그램 전시" 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
+                  decoding="async"
                   animate={{ scale: [1, 1.1, 1] }}
                   transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
                 />
@@ -579,7 +581,9 @@ const About = ({ config, onEditImage }: { config: any, onEditImage: (field: stri
                    src={config?.aboutImage || "https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?auto=format&fit=crop&q=80&w=800"} 
                    className="w-full h-full object-cover" 
                    referrerPolicy="no-referrer" 
-                   alt="공예 도구와 재료"
+                   alt="공예치료 도구와 다양한 치유 재료"
+                   loading="lazy"
+                   decoding="async"
                    animate={{ scale: [1, 1.1, 1] }}
                    transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
                  />
@@ -667,9 +671,11 @@ const Programs = ({ config, onEditProgramImage }: { config: any, onEditProgramIm
                   >
                     <motion.img 
                       src={item.image} 
-                      alt={item.title} 
+                      alt={`공예치료 프로그램 - ${item.title}`} 
                       className="w-full h-full object-cover transition-transform duration-700"
                       referrerPolicy="no-referrer"
+                      loading="lazy"
+                      decoding="async"
                       animate={{ scale: [1, 1.1, 1] }}
                       transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
                       whileHover={{ scale: 1.05 }}
@@ -756,7 +762,9 @@ const Certification = ({ config, onEditImage, onOpenApply, isAdmin, onOpenAdminV
                     src={config?.certificationImage || "https://images.unsplash.com/photo-1513519245088-0e12902e15cb?auto=format&fit=crop&q=80&w=800"} 
                     className="w-full h-full object-cover rounded-[56px]" 
                     referrerPolicy="no-referrer" 
-                    alt="자격증 과정 실습"
+                    alt="자격증 취득 공예치료사 자격 과정 실습"
+                    loading="lazy"
+                    decoding="async"
                     animate={{ scale: [1, 1.1, 1] }}
                     transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
                    />
@@ -806,7 +814,9 @@ const Gallery = ({ items, isAdmin, onDelete, onEdit, onAdd, user, onLogin }: { i
                  src={img.src || undefined} 
                  className="w-full h-full object-cover" 
                  referrerPolicy="no-referrer" 
-                 alt={img.title || "협회 활동 사진"}
+                 alt={`${img.title || "한국공예치료사협회"} - 공예치료 활동 사진`}
+                 loading="lazy"
+                 decoding="async"
                  animate={{ scale: [1, 1.1, 1] }}
                  transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
                  whileHover={{ scale: 1.1 }}
@@ -1335,7 +1345,9 @@ const Contact = ({ config, onEditImage }: { config: any, onEditImage?: (field: s
                       src={config?.contactImage || "https://images.unsplash.com/photo-1544411047-c491e34a2450?auto=format&fit=crop&q=80&w=800"} 
                       className="w-full h-full object-cover" 
                       referrerPolicy="no-referrer" 
-                      alt="상담 안내 이미지"
+                      alt="공예치료 교육 상담 및 문의 안내"
+                      loading="lazy"
+                      decoding="async"
                       animate={{ scale: [1, 1.1, 1] }}
                       transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
                     />
