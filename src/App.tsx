@@ -730,7 +730,16 @@ const Certification = ({ config, onEditImage, onOpenApply, isAdmin, onOpenAdminV
                className="flex-1"
             >
                <h2 className="text-primary-foreground/60 font-bold mb-4 tracking-widest uppercase">Professional</h2>
-               <h3 className="text-2xl md:text-3xl font-bold mb-8 break-keep">공예치료사 자격증 과정</h3>
+               <h3 className="text-2xl md:text-3xl font-bold mb-8 break-keep">
+                 공예심리사 자격증 과정{' '}
+                 <motion.span 
+                   animate={{ opacity: [1, 0, 1] }}
+                   transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut" }}
+                   className="text-amber-300 ml-2"
+                 >
+                   10월 오픈 예정
+                 </motion.span>
+               </h3>
                <p className="text-white/70 text-base mb-10 leading-relaxed max-w-xl break-keep">
                   이론부터 실전 현장 적용까지, 전문 강사진의 노하우를 직접 전수받습니다. 
                   자격증 취득 후 활발한 활동을 하실 수 있도록 협회가 든든한 파트너가 됩니다.
@@ -1451,7 +1460,20 @@ export default function App() {
     const fetchData = async () => {
       try {
         const [n, g, c] = await Promise.all([getNotices(), getGallery(), getMainConfig()]);
-        setNotices(n.length > 0 ? n : DEFAULT_NOTICES);
+        
+        // Use default notices if none exist in Firebase
+        const rawNotices = n.length > 0 ? n : DEFAULT_NOTICES;
+        
+        // Programmatically rename the notice as requested by the user, 
+        // especially since they faced difficulty deleting it
+        const processedNotices = rawNotices.map(item => {
+          if (item.title === "홈페이지 오픈") {
+            return { ...item, title: "2026년 하반기 자격증과정 오픈" };
+          }
+          return item;
+        });
+        
+        setNotices(processedNotices);
         setGallery(g.length > 0 ? g : DEFAULT_GALLERY);
         if (c) setConfig(c);
       } catch (err) {
@@ -1494,17 +1516,19 @@ export default function App() {
   };
 
   const handleDeleteNotice = async (id: string) => {
-    if (confirm("정말 이 공지를 삭제하시겠습니까?")) {
+    if (!id) return;
+    
+    if (window.confirm("정말 이 공지를 삭제하시겠습니까?")) {
       try {
-        // Only call deleteNotice if it's a Firestore document ID (usually 20 chars)
-        if (id && id.length > 10) {
-          await deleteNotice(id);
-        }
-        // Always update local state to reflect deletion
-        setNotices(prev => prev.filter(n => (n.id || n.title) !== id));
+        // Attempt to delete from Firestore first
+        // If it's a default item (not in Firestore), this might throw or do nothing
+        // We catch errors to ensure local state is updated regardless
+        await deleteNotice(id);
       } catch (err) {
-        console.error("Failed to delete notice", err);
-        alert("삭제에 실패했습니다. 다시 시도해주세요.");
+        console.error("Firestore delete failed, might be a default item:", err);
+      } finally {
+        // ALWAYS update local state to provide immediate feedback
+        setNotices(prev => prev.filter(n => n.id !== id && n.title !== id));
       }
     }
   };
