@@ -458,21 +458,21 @@ const Hero = ({ config, onEditImage }: { config: any, onEditImage: (field: strin
                 viewport={{ once: true }}
                 transition={{ duration: 2.5, ease: [0.22, 1, 0.36, 1] }}
               >
-                공예치료 · 바느질치료
+                공예치료 전문기관
               </motion.div>
               <motion.div
                 initial={{ x: -150, opacity: 0, filter: "blur(15px)" }}
                 whileInView={{ x: 0, opacity: 1, filter: "blur(0px)" }}
                 viewport={{ once: true }}
                 transition={{ duration: 2.5, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
-                className="text-primary italic mt-1"
+                className="text-primary mt-1"
               >
-                한국공예치료사협회
+                한국공예치료사협회 <br /> K-Hand
               </motion.div>
             </h1>
             <p className="text-base md:text-lg text-slate-600 mb-10 leading-relaxed max-w-lg break-keep">
-              공예치료를 통해 나를 만나는 시간.<br />
-              한국공예치료사 협회가 당신의 마음을 보듬고 삶의 위안을 더합니다.
+              한국공예치료사협회 <br className="md:hidden" /> K-Hand는 성인·노인·아동 대상 공예치료 프로그램과 공예치료사 자격과정을 운영합니다. <br />
+              감정회복, 스트레스 완화, 심리안정을 위한 다양한 공예치료 활동을 제공합니다.
             </p>
             <div className="flex flex-wrap gap-4">
               <a href="#association-gallery" className="bg-primary text-white px-10 py-5 rounded-2xl font-bold shadow-lg shadow-primary/20 hover:shadow-xl hover:translate-y-[-2px] transition-all flex items-center gap-2 text-base cursor-pointer">
