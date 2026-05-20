@@ -58,7 +58,7 @@ const DEFAULT_GALLERY = [
   { src: 'https://images.unsplash.com/photo-1544411047-c491e34a2450?auto=format&fit=crop&q=80&w=800', title: '협회 워크숍', category: '전체' },
   { src: 'https://images.unsplash.com/photo-1513519245088-0e12902e15cb?auto=format&fit=crop&q=80&w=800', title: '작품 전시', category: '전체' },
   { src: 'https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&q=80&w=800', title: '아동 창의 공예', category: '아동' },
-  { src: 'https://images.unsplash.com/photo-1581579438747-1dc8c17bbce4?auto=format&fit=crop&q=80&w=800', title: '어르신 치유 프로그램', category: '노인' },
+  { src: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=800', title: '어르신 치유 프로그램', category: '노인' },
   { src: 'https://images.unsplash.com/photo-1605722243979-fe0be8158232?auto=format&fit=crop&q=80&w=800', title: '자수 작업', category: '성인' },
   { src: 'https://images.unsplash.com/photo-1544256718-3bcf237f3974?auto=format&fit=crop&q=80&w=800', title: '페이퍼 아트 클래스', category: '성인' },
   { src: 'https://images.unsplash.com/photo-1540324153951-891179631b44?auto=format&fit=crop&q=80&w=800', title: '목공예 실습', category: '자격증' },
@@ -248,7 +248,7 @@ const EditModal = ({
                 <textarea 
                   value={value}
                   onChange={(e) => setValue(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 min-h-[100px] text-xs font-mono focus:ring-2 focus:ring-primary focus:outline-none transition-all"
+                  className={`w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 min-h-[140px] focus:ring-2 focus:ring-primary focus:outline-none transition-all ${isImageEdit ? 'text-xs font-mono' : 'text-sm font-medium leading-relaxed'}`}
                   placeholder={isImageEdit ? "http://... 형태의 주소나 업로드된 코드가 여기에 표시됩니다" : "내용을 입력하세요..."}
                 />
               </div>
@@ -291,7 +291,6 @@ const Navbar = ({ user, onLogin, onLogout, isAdmin, onOpenAdminView }: { user: a
     { name: '협회소개', href: '#mission' },
     { name: '공예치료', href: '#about' },
     { name: '프로그램안내', href: '#programs' },
-    { name: '자격증과정', href: '#certification' },
     { name: '협회활동', href: '#association-gallery' },
     { name: '공지사항', href: '#notice' },
   ];
@@ -432,7 +431,7 @@ const Navbar = ({ user, onLogin, onLogout, isAdmin, onOpenAdminView }: { user: a
   );
 };
 
-const Hero = ({ config, onEditImage }: { config: any, onEditImage: (field: string) => void }) => {
+const Hero = ({ config, onEditImage, onEditText }: { config: any, onEditImage: (field: string) => void, onEditText?: (field: string, label: string) => void }) => {
   return (
     <section className="relative min-h-[90vh] flex items-center pt-20 overflow-hidden bg-white">
        {/* Decorative Background Elements */}
@@ -447,33 +446,76 @@ const Hero = ({ config, onEditImage }: { config: any, onEditImage: (field: strin
           >
             <div className="flex items-center gap-2 mb-6">
               <div className="h-0.5 w-8 bg-primary" />
-              <span className="text-xs font-bold tracking-widest text-primary uppercase">
-                Korea-Hand Healing Art
+              <span className="text-xs font-bold tracking-widest text-primary uppercase relative group/badge flex items-center gap-1">
+                {config?.heroBadge || "Korea-Hand Healing Art"}
+                {onEditText && (
+                  <button 
+                    onClick={() => onEditText('heroBadge', '상단태그 수정')} 
+                    className="opacity-0 group-hover/badge:opacity-100 p-1 text-slate-400 hover:text-primary transition-all rounded-full hover:bg-slate-50 cursor-pointer"
+                    title="문구 수정"
+                  >
+                    <Edit size={12} />
+                  </button>
+                )}
               </span>
             </div>
-            <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-8 leading-[1.1] text-slate-900 break-keep overflow-hidden">
-              <motion.div
-                initial={{ x: -150, opacity: 0, filter: "blur(15px)" }}
-                whileInView={{ x: 0, opacity: 1, filter: "blur(0px)" }}
-                viewport={{ once: true }}
-                transition={{ duration: 2.5, ease: [0.22, 1, 0.36, 1] }}
-              >
-                공예치료 전문기관
-              </motion.div>
-              <motion.div
-                initial={{ x: -150, opacity: 0, filter: "blur(15px)" }}
-                whileInView={{ x: 0, opacity: 1, filter: "blur(0px)" }}
-                viewport={{ once: true }}
-                transition={{ duration: 2.5, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
-                className="text-primary mt-1"
-              >
-                한국공예치료사협회 <br /> K-Hand
-              </motion.div>
-            </h1>
-            <p className="text-base md:text-lg text-slate-600 mb-10 leading-relaxed max-w-lg break-keep">
-              한국공예치료사협회 <br className="md:hidden" /> K-Hand는 성인·노인·아동 대상 공예치료 프로그램과 공예치료사 자격과정을 운영합니다. <br />
-              감정회복, 스트레스 완화, 심리안정을 위한 다양한 공예치료 활동을 제공합니다.
-            </p>
+            
+            <div className="relative group/title inline-block w-full">
+              <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-8 leading-[1.1] text-slate-900 break-keep overflow-hidden">
+                <motion.div
+                  initial={{ x: -150, opacity: 0, filter: "blur(15px)" }}
+                  whileInView={{ x: 0, opacity: 1, filter: "blur(0px)" }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 2.5, ease: [0.22, 1, 0.36, 1] }}
+                  className="whitespace-pre-line"
+                >
+                  {config?.heroTitle1 || "공예치료 전문기관"}
+                </motion.div>
+                <motion.div
+                  initial={{ x: -150, opacity: 0, filter: "blur(15px)" }}
+                  whileInView={{ x: 0, opacity: 1, filter: "blur(0px)" }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 2.5, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
+                  className="text-primary mt-1 whitespace-pre-line"
+                >
+                  {config?.heroTitle2 || "한국공예치료사협회 \n K-Hand"}
+                </motion.div>
+              </h1>
+              {onEditText && (
+                <div className="absolute -top-3 right-0 flex gap-2 z-10">
+                  <button 
+                    onClick={() => onEditText('heroTitle1', '제목 첫째줄 수정')} 
+                    className="bg-white p-2 rounded-full border border-slate-100 shadow-md text-slate-400 hover:text-primary transition-all hover:scale-110 flex items-center justify-center cursor-pointer font-normal text-xs gap-1"
+                    title="첫째 줄 수정"
+                  >
+                    <Edit size={14} /> <span className="text-[10px]">1줄</span>
+                  </button>
+                  <button 
+                    onClick={() => onEditText('heroTitle2', '제목 둘째줄 수정')} 
+                    className="bg-white p-2 rounded-full border border-slate-100 shadow-md text-slate-400 hover:text-primary transition-all hover:scale-110 flex items-center justify-center cursor-pointer font-normal text-xs gap-1"
+                    title="둘째 줄 수정"
+                  >
+                    <Edit size={14} /> <span className="text-[10px]">2줄</span>
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div className="relative group/desc inline-block w-full mb-10">
+              <p className="text-base md:text-lg text-slate-600 leading-relaxed break-keep whitespace-pre-line">
+                {config?.heroDesc || `한국공예치료사협회 \n K-Hand는 성인·노인·아동 대상 공예치료 프로그램을 운영합니다. \n 감정회복, 스트레스 완화, 심리안정을 위한 다양한 공예치료 활동을 제공합니다.`}
+              </p>
+              {onEditText && (
+                <button 
+                  onClick={() => onEditText('heroDesc', '설명문 수정')} 
+                  className="absolute -top-3 right-0 bg-white p-2 rounded-full border border-slate-100 shadow-md text-slate-400 hover:text-primary transition-all hover:scale-110 flex items-center justify-center cursor-pointer"
+                  title="설명문 수정"
+                >
+                  <Edit size={16} />
+                </button>
+              )}
+            </div>
+
             <div className="flex flex-wrap gap-4">
               <a href="#association-gallery" className="bg-primary text-white px-10 py-5 rounded-2xl font-bold shadow-lg shadow-primary/20 hover:shadow-xl hover:translate-y-[-2px] transition-all flex items-center gap-2 text-base cursor-pointer">
                 협회 활동 보기 <ChevronRight size={22} />
@@ -546,35 +588,58 @@ const Hero = ({ config, onEditImage }: { config: any, onEditImage: (field: strin
   );
 };
 
-const About = ({ config, onEditImage }: { config: any, onEditImage: (field: string) => void }) => {
+const About = ({ config, onEditImage, onEditText }: { config: any, onEditImage: (field: string) => void, onEditText?: (field: string, label: string) => void }) => {
+  const points = [
+    { t: "정서적 안정과 스트레스 해소", d: "다양한 조형 활동을 통해 감정을 순화하여 내적 스트레스와 긴장을 완화시킵니다." },
+    { t: "성취감 유발과 자존감 향상", d: "자신만의 작품을 구상하고 완성하는 경험을 통해 건강한 자아를 형성하고 성취감을 제공합니다." },
+    { t: "인지 기능 촉진과 감각 자극", d: "여러 가지 질감의 재료들을 손으로 다루며 미세한 운동 자극과 오감 활성화를 돕습니다." }
+  ];
+
   return (
     <section id="about" className="bg-slate-50 py-24 md:py-32">
       <div className="section-container">
         <div className="grid lg:grid-cols-2 gap-20 items-center">
            <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+             initial={{ opacity: 0, y: 30 }}
+             whileInView={{ opacity: 1, y: 0 }}
+             viewport={{ once: true }}
            >
               <h2 className="text-primary font-bold tracking-[0.2em] mb-4 uppercase text-sm">Main Concept</h2>
-              <h3 className="text-2xl md:text-3xl font-bold mb-8 text-slate-900 leading-tight break-keep">
-                공예치료란 무엇인가요?
-              </h3>
-              <p className="text-base text-slate-600 mb-10 leading-loose break-keep">
-                공예치료란 손으로 만드는 과정 속에서 마음을 돌봅니다. 다양한 공예 활동을 통해 감정을 표현하고 정서적 안정을 돕는 심리치유를 목적으로 합니다. 반복되는 손작업은 마음을 차분하게 하고 완성의 경험을 통해 성취감을 느낄 수 있게 됩니다. 언어로 표현하기 어려운 감정을 표현할 수 있습니다.
-              </p>
               
+              <div className="relative group/title inline-block w-full">
+                <h3 className="text-2xl md:text-3xl font-bold mb-8 text-slate-900 leading-tight break-keep whitespace-pre-line">
+                  {config?.aboutTitle || "공예치료란 무엇인가요?"}
+                </h3>
+                {onEditText && (
+                  <button 
+                    onClick={() => onEditText('aboutTitle', '공예치료 소개 제목 수정')} 
+                    className="absolute -top-3 right-0 bg-white p-2 rounded-full border border-slate-100 shadow-md text-slate-400 hover:text-primary transition-all hover:scale-110 flex items-center justify-center cursor-pointer"
+                    title="제목 수정"
+                  >
+                    <Edit size={14} />
+                  </button>
+                )}
+              </div>
+
+              <div className="relative group/desc inline-block w-full">
+                <p className="text-base text-slate-600 mb-10 leading-loose break-keep whitespace-pre-line">
+                  {config?.aboutDesc || "공예치료란 손으로 만드는 과정 속에서 마음을 돌봅니다. 다양한 공예 활동을 통해 감정을 표현하고 정서적 안정을 돕는 심리치유를 목적으로 합니다. 반복되는 손작업은 마음을 차분하게 하고 완성의 경험을 통해 성취감을 얻게 합니다."}
+                </p>
+                {onEditText && (
+                  <button 
+                    onClick={() => onEditText('aboutDesc', '공예치료 소개 상세 수정')} 
+                    className="absolute -top-3 right-0 bg-white p-2 rounded-full border border-slate-100 shadow-md text-slate-400 hover:text-primary transition-all hover:scale-110 flex items-center justify-center cursor-pointer"
+                    title="설명 수정"
+                  >
+                    <Edit size={14} />
+                  </button>
+                )}
+              </div>
+
               <div className="space-y-6">
-                {[
-                  { t: "심리적 안정과 스트레스 완화", d: "손작업에 집중하며 일상의 긴장을 해소하고 정서적 평온을 찾습니다." },
-                  { t: "몰입(Flow)과 자아 효능감 증진", d: "만드는 즐거움 속에서 몰입을 경험하고 완성의 성취감을 느낍니다." },
-                  { t: "우울감과 불안 완화", d: "다양한 재료를 매개로 부정적 감정을 완화하고 심리적 탄력성을 높입니다." },
-                  { t: "사회적 치유와 관계 형성", d: "함께 작품을 만들고 소통하며 소속감과 정서적 유대를 강화합니다." }
-                ].map((point, i) => (
-                  <div key={i} className="flex gap-4">
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-sm">
-                      {i+1}
-                    </div>
+                {points.map((point, index) => (
+                  <div key={index} className="flex gap-4 items-start">
+                    <div className="w-1.5 h-1.5 bg-[#004D40] rounded-full mt-2 shrink-0" />
                     <div>
                       <h4 className="font-bold text-base mb-1 break-keep">{point.t}</h4>
                       <p className="text-slate-500 text-sm break-keep">{point.d}</p>
@@ -604,14 +669,14 @@ const About = ({ config, onEditImage }: { config: any, onEditImage: (field: stri
                    transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
                  />
                  {onEditImage && (
-                    <div className="absolute bottom-6 right-6 bg-primary text-white p-4 rounded-full shadow-2xl flex items-center gap-2 font-bold text-sm">
+                    <div className="absolute bottom-6 right-6 bg-[#004D40] text-white p-4 rounded-full shadow-2xl flex items-center gap-2 font-bold text-sm">
                       <ImageIcon size={20} />
                       <span>사진 변경</span>
                     </div>
                  )}
               </motion.div>
               {/* Accents */}
-              <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-primary rounded-full -z-10" />
+              <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-[#004D40]/10 rounded-full -z-10" />
            </div>
         </div>
       </div>
@@ -619,95 +684,228 @@ const About = ({ config, onEditImage }: { config: any, onEditImage: (field: stri
   );
 };
 
-const Programs = ({ config, onEditProgramImage }: { config: any, onEditProgramImage: (id: number) => void }) => {
+const Programs = ({ 
+  config, 
+  onEditProgramImage,
+  onEditProgramTitle,
+  onEditProgramBullets
+}: { 
+  config: any, 
+  onEditProgramImage: (id: number) => void,
+  onEditProgramTitle?: (id: number) => void,
+  onEditProgramBullets?: (id: number) => void
+}) => {
+  const getProgramImage = (id: number, fallback: string) => {
+    const img = config?.programImages?.[id];
+    const resolved = (img && img.trim() && img !== 'undefined') ? img : fallback;
+    if (id === 3 && (resolved.includes("photo-1502086223501-7ea6ecd79368") || resolved.includes("photo-1581579438747-1dc8c17bbce4") || resolved.includes("photo-1544816155-12df9643f363") || !resolved || resolved.trim() === '')) {
+      return "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&q=80&w=600";
+    }
+    return resolved;
+  };
+
+  const defaultBullets1 = ["스트레스 완화와 정서 안정", "공예 활동을 통한 집중과 마음 환기", "편안한 소통과 심리적 휴식"];
+  const defaultBullets2 = ["정서 안정과 심리적 지지", "자존감 및 자기표현 향상", "협동심과 사회성 발달"];
+  const defaultBullets3 = ["인지 자극과 집중력 향상", "손작업을 통한 정서 안정", "사회적 교류와 활기찬 여가 활동"];
+
+  const getProgramBullets = (id: number, fallback: string[]) => {
+    const custom = config?.programBullets?.[id];
+    if (!custom || !Array.isArray(custom) || custom.length === 0) return fallback;
+    
+    // Check if the current list matches old legacy default lists and replace with new ones
+    const isLegacy = (
+      (id === 1 && (custom.includes("스트레스 정서 완화") || custom.includes("집중과 마음환기") || custom.includes("마음의 평온 교류") || custom.includes("심리적 안정") || custom.includes("자기돌봄"))) ||
+      (id === 2 && (custom.includes("정서 안정과 지지") && custom.includes("자아존중감 향상"))) ||
+      (id === 3 && (custom.includes("인지 능력 고양") && custom.includes("마음 치유 활동")))
+    );
+    
+    if (isLegacy) return fallback;
+    return custom;
+  };
+
   const programs = [
     {
       id: 1,
-      title: "성인대상",
-      bullets: ["스트레스 완화", "감정회복", "자기돌봄", "임산부 태교"],
-      image: config?.programImages?.[1] || "https://images.unsplash.com/photo-1605722243979-fe0be8158232?auto=format&fit=crop&q=80&w=600",
-    },
-    {
-      id: 2,
-      title: "노인대상",
-      bullets: ["기억회상", "치매예방", "우울감 완화"],
-      image: config?.programImages?.[2] || "https://images.unsplash.com/photo-1513519245088-0e12902e15cb?auto=format&fit=crop&q=80&w=600",
+      title: config?.programTitles?.[1] || "성인대상",
+      bullets: getProgramBullets(1, defaultBullets1),
+      image: getProgramImage(1, "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=600")
     },
     {
       id: 3,
-      title: "아동대상",
-      bullets: ["정서적 안정", "자기조절", "사회성 향상 및 관계형성", "자신감 향상"],
-      image: config?.programImages?.[3] || "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&q=80&w=600",
+      title: config?.programTitles?.[3] || "시니어 대상",
+      bullets: getProgramBullets(3, defaultBullets3),
+      image: getProgramImage(3, "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&q=80&w=600")
     },
     {
-      id: 4,
-      title: "기관 맞춤형 출강 프로그램",
-      bullets: ["기업", "문화센터", "복지관 & 요양원", "학교 & 단체"],
-      image: config?.programImages?.[4] || "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=800",
+      id: 2,
+      title: config?.programTitles?.[2] || "아동·청소년 대상",
+      bullets: getProgramBullets(2, defaultBullets2),
+      image: getProgramImage(2, "https://images.unsplash.com/photo-1506806732259-39c2d4a78ae7?auto=format&fit=crop&q=80&w=600")
     }
   ];
 
   return (
-    <section id="programs" className="bg-white py-24">
+    <section id="programs" className="py-24 bg-white">
       <div className="section-container">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-20">
-            <h2 className="text-primary font-bold mb-4 tracking-widest uppercase text-sm">Programming</h2>
-            <h3 className="text-3xl md:text-4xl font-bold text-slate-900 break-keep">대상별 맞춤형 프로그램</h3>
+          <div className="text-center mb-16">
+            <h2 className="text-[#004D40] font-bold mb-4 tracking-widest uppercase text-sm">Target Programs</h2>
+            <h3 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6 break-keep">대상별 맞춤형 치유 가이드</h3>
           </div>
-
-          <div className="space-y-12">
-            {programs.map((item, idx) => (
+          <div className="space-y-8">
+            {programs.map((item, index) => (
               <motion.div
                 key={item.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
+                transition={{ duration: 0.8, delay: index * 0.1 }}
+                className="bg-white p-8 rounded-[32px] border border-slate-100 shadow-sm hover:shadow-lg transition-all"
               >
-                <div className="flex flex-col md:flex-row items-start gap-8 md:gap-16 pb-12 border-b border-slate-100 last:border-0 last:pb-0">
-                  <div className="flex items-start gap-8 flex-1">
-                    <span className="text-7xl font-black text-[#004D40] leading-none opacity-90">{item.id}</span>
+                <div className="flex flex-col md:flex-row gap-8 items-center justify-between">
+                  <div className="flex gap-6 items-start">
+                    <span className="text-7xl font-black text-[#004D40]/10 leading-none">{index + 1}</span>
                     <div className="pt-2">
-                       <h4 className="text-2xl font-extrabold text-slate-900 mb-6 break-keep">{item.title}</h4>
-                       <ul className="space-y-3">
+                      <div className="flex items-center gap-2 group/title">
+                        <h4 className="text-2xl font-extrabold text-[#004D40] mb-4 break-keep">{item.title}</h4>
+                        {onEditProgramTitle && (
+                          <button 
+                            onClick={() => onEditProgramTitle(item.id)} 
+                            className="opacity-0 group-hover/title:opacity-100 text-slate-400 hover:text-primary mb-4 p-1 hover:bg-slate-50 transition-all rounded cursor-pointer"
+                            title="제목 수정"
+                          >
+                            <Edit size={14} />
+                          </button>
+                        )}
+                      </div>
+                      <div className="relative group/bullets">
+                        <ul className="space-y-3">
                           {item.bullets.map((bullet, bi) => (
-                            <li key={bi} className="flex items-center gap-3 text-slate-600 font-medium whitespace-nowrap">
-                               <div className="w-1.5 h-1.5 bg-[#004D40] rounded-full shrink-0" />
-                               <span className="text-lg break-keep">{bullet}</span>
+                            <li key={bi} className="flex items-center gap-3 text-slate-600 font-medium whitespace-no-wrap">
+                              <div className="w-1.5 h-1.5 bg-[#004D40] rounded-full" />
+                              {bullet}
                             </li>
                           ))}
-                       </ul>
+                        </ul>
+                        {onEditProgramBullets && (
+                          <button 
+                            onClick={() => onEditProgramBullets(item.id)} 
+                            className="absolute -top-1 -right-8 opacity-0 group-hover/bullets:opacity-100 text-slate-400 hover:text-primary p-1 hover:bg-slate-50 transition-all rounded cursor-pointer"
+                            title="특징 문구 수정"
+                          >
+                            <Edit size={14} />
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
-                  
-                  <motion.div 
-                    initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                    whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-                    className={`w-full md:w-72 aspect-[4/3] rounded-3xl overflow-hidden relative shadow-xl group ${onEditProgramImage ? 'cursor-pointer' : ''}`}
-                    onClick={() => onEditProgramImage && onEditProgramImage(item.id)}
-                  >
-                    <motion.img 
+                  <div className="w-full md:w-80 h-48 rounded-2xl overflow-hidden shadow-md relative group">
+                    <img 
                       src={item.image} 
-                      alt={`공예치료 프로그램 - ${item.title}`} 
-                      className="w-full h-full object-cover transition-transform duration-700"
+                      alt={item.title} 
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       referrerPolicy="no-referrer"
-                      loading="lazy"
-                      decoding="async"
-                      animate={{ scale: [1, 1.1, 1] }}
-                      transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-                      whileHover={{ scale: 1.05 }}
                     />
                     {onEditProgramImage && (
-                      <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <div className="bg-white/90 backdrop-blur-sm p-3 rounded-2xl flex items-center gap-2 font-bold text-xs text-primary shadow-xl">
-                           <ImageIcon size={16} /> 사진 변경
-                        </div>
-                      </div>
+                      <button 
+                        onClick={() => onEditProgramImage(item.id)}
+                        className="absolute top-2 right-2 bg-black/60 hover:bg-black/80 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-md opacity-0 group-hover:opacity-100 transition-all cursor-pointer flex items-center gap-1"
+                      >
+                        <Edit size={12} />
+                        <span>사진 변경</span>
+                      </button>
                     )}
-                  </motion.div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const HealingClasses = () => {
+  const categories = [
+    {
+      title: "기업공예강의 & 기업 힐링 워크숍",
+      subtitle: "스트레스 해소와 창의적 몰입",
+      desc: "임직원들의 번아웃 예방과 감정 정화를 돕는 대표적인 기업공예강의 프로그램입니다. 다채로운 기업 힐링 워크숍을 통해 손끝 감각에 고도로 몰입하며 일상의 스트레스 해소와 따뜻한 성취감 및 마음의 여유를 선사합니다.",
+      tags: ["#기업공예강의", "#기업힐링워크숍", "#스트레스해소", "#임직원워크숍"]
+    },
+    {
+      title: "복지관 출강 & 요양시설 시니어 치유 교실",
+      subtitle: "치매 예방과 심리적 활력 부여",
+      desc: "노인복지관, 주간보호센터 등 다양한 복지관 출강 노하우를 바탕으로 어르신들의 인지 능력을 높이는 시니어 미술치료와 정서적 평온을 주는 원예치료를 복합 설계한 전문 공예수업 및 심리치료 프로그램입니다.",
+      tags: ["#복지관출강", "#시니어치매예방", "#원예치료", "#실버공예"]
+    },
+    {
+      title: "학교 단체수업 & 교육청 청소년 예술치료 교실",
+      subtitle: "자아존중감 증진과 교사·학부모 연수",
+      desc: "아동·청소년들의 자아존중감 증진과 정서 함양을 위한 전문적이고 체계적인 예술치료 및 미술치료 학교 단체수업입니다. 학기 중 진로체험 외에도 교육청 교사 연수, 학부모 연수 프로그램으로도 추천합니다.",
+      tags: ["#학교단체수업", "#예술치료", "#교사연수", "#학부모연수"]
+    },
+    {
+      title: "문화센터 & 소모임 힐링 원데이클래스",
+      subtitle: "감성적인 나만의 아날로그 핸드메이드",
+      desc: "일상 소모임부터 백화점 문화센터 교실까지 가볍게 경험할 수 있는 공예 원데이클래스 및 유익한 공예수업입니다. 정성 담긴 손작업 과정을 거치며 지친 일상에 편안한 휴식과 따뜻한 힐링을 맞이해보세요.",
+      tags: ["#원데이클래스", "#공예수업", "#힐링원데이클래스", "#공예치료사"]
+    }
+    ,
+    {
+      title: "임산부 대상 태아 애착 형성 배냇저고리 만들기 힐링프로그램",
+      subtitle: "예비 엄마들의 정서 안정과 태교",
+      desc: "보건소 및 육아종합지원센터 출강 프로그램으로 인기 높은 임산부 대상 태아 애착 형성 배냇저고리 만들기 힐링프로그램입니다. 사랑 가득 담긴 한 땀 손작업에 고도로 몰입하며 산전 우울감을 완화하고 태아와 교감하는 따뜻한 안정을 얻습니다.",
+      tags: ["#임산부태교", "#배냇저고리만들기", "#태아애착형성", "#보건소출강"]
+    },
+    {
+      title: "병원 & 정신복지센터 전문",
+      subtitle: "감정 치유와 깊은 내면의 위로",
+      desc: "심리적 안정과 자존감 향상이 필요한 분들을 위해 치료 임상 경험을 보유한 전문 강사가 미술치료, 공예치료, 심리치료, 원예치료를 진행합니다. 언어적 한계를 극복하는 다채로운 매체를 사용해 따뜻한 위안을 전합니다.",
+      tags: ["#심리치료", "#미술치료", "#원예치료", "#예술치료"]
+    }
+  ];
+
+  return (
+    <section id="healing-classes" className="bg-slate-50 py-24 border-t border-b border-slate-100">
+      <div className="section-container">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-[#004D40] font-bold mb-4 tracking-widest uppercase text-sm">Healing & Art Class Guide</h2>
+            <h3 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6 break-keep">
+              공예수업 및 예술치료 단체 출강 안내
+            </h3>
+            <p className="text-slate-600 max-w-2xl mx-auto leading-relaxed break-keep text-balance text-base md:text-lg">
+              한국공예치료사협회 K-Hand는 수년간 쌓아온 <strong>공예치료, 예술치료, 힐링공예</strong> 기획 노하우를 바탕으로 전국의 기업, 학교, 복지시설에 최적화된 맞춤형 전문 교육 및 심리치유 프로그램을 운영하고 있습니다. 마음을 보듬고 치유하는 데 집중된 고품격 커리큘럼을 직접 확인해보세요.
+            </p>
+          </div>
+
+          {/* Cards Grid */}
+          <div className="grid md:grid-cols-2 gap-8 mb-16">
+            {categories.map((cat, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: i * 0.1 }}
+                className="bg-white p-8 rounded-[32px] shadow-sm hover:shadow-xl hover:translate-y-[-4px] transition-all border border-slate-100/50 flex flex-col justify-between"
+              >
+                <div>
+                  <span className="text-xs font-bold text-[#004D40] tracking-wider uppercase bg-[#004D40]/5 px-3.5 py-1.5 rounded-full inline-block mb-4">
+                    {cat.subtitle}
+                  </span>
+                  <h4 className="text-xl font-extrabold text-slate-900 mb-4 break-keep">{cat.title}</h4>
+                  <p className="text-slate-500 text-sm leading-relaxed mb-6 break-keep">{cat.desc}</p>
+                </div>
+                
+                <div className="flex flex-wrap gap-2 pt-4 border-t border-slate-50">
+                  {cat.tags.map((tag, ti) => (
+                    <span key={ti} className="text-xs font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-md">
+                      {tag}
+                    </span>
+                  ))}
                 </div>
               </motion.div>
             ))}
@@ -1235,7 +1433,7 @@ const Notice = ({
   );
 };
 
-const Mission = ({ config, onEditImage }: { config: any, onEditImage: (field: string) => void }) => {
+const Mission = ({ config, onEditImage, onEditText }: { config: any, onEditImage: (field: string) => void, onEditText?: (field: string, label: string) => void }) => {
   return (
     <section id="mission" className="bg-[#004D40] py-24 text-white overflow-hidden">
       <div className="section-container">
@@ -1273,12 +1471,36 @@ const Mission = ({ config, onEditImage }: { config: any, onEditImage: (field: st
             viewport={{ once: true }}
           >
             <h2 className="text-secondary font-bold mb-4 tracking-widest text-sm uppercase">About Us</h2>
-            <h3 className="text-3xl md:text-5xl font-black mb-8 leading-tight break-keep">
-              협회 소개
-            </h3>
-            <p className="text-lg text-white/80 mb-12 leading-relaxed break-keep">
-              한국공예치료사 협회는 공예를 통해 사람의 마음을 돌보고, 삶의 온기를 회복하는 치유의 시간을 만들어갑니다.
-            </p>
+            
+            <div className="relative group/title inline-block w-full">
+              <h3 className="text-3xl md:text-5xl font-black mb-8 leading-tight break-keep whitespace-pre-line">
+                {config?.missionTitle || "협회 소개"}
+              </h3>
+              {onEditText && (
+                <button 
+                  onClick={() => onEditText('missionTitle', '협회 소개 제목 수정')} 
+                  className="absolute -top-3 right-0 bg-white text-slate-700 p-2 rounded-full border border-slate-100 shadow-md hover:text-primary transition-all hover:scale-110 flex items-center justify-center cursor-pointer"
+                  title="제목 수정"
+                >
+                  <Edit size={14} />
+                </button>
+              )}
+            </div>
+
+            <div className="relative group/desc inline-block w-full mb-12">
+              <p className="text-lg text-white/80 leading-relaxed break-keep whitespace-pre-line">
+                {config?.missionDesc || "한국공예치료사 협회는 공예를 통해 사람의 마음을 돌보고, 삶의 온기를 회복하는 치유의 시간을 만들어갑니다."}
+              </p>
+              {onEditText && (
+                <button 
+                  onClick={() => onEditText('missionDesc', '협회 소개 설명문 수정')} 
+                  className="absolute -top-3 right-0 bg-white text-slate-700 p-2 rounded-full border border-slate-100 shadow-md hover:text-primary transition-all hover:scale-110 flex items-center justify-center cursor-pointer"
+                  title="설명문 수정"
+                >
+                  <Edit size={14} />
+                </button>
+              )}
+            </div>
             
             <div className="space-y-4">
               {[
@@ -1456,28 +1678,90 @@ export default function App() {
     return () => unsub();
   }, []);
 
+  // Sync to localStorage
   useEffect(() => {
+    if (notices && notices.length > 0) {
+      localStorage.setItem('khand_notices_cache', JSON.stringify(notices));
+    }
+  }, [notices]);
+
+  useEffect(() => {
+    if (gallery && gallery.length > 0) {
+      localStorage.setItem('khand_gallery_cache', JSON.stringify(gallery));
+    }
+  }, [gallery]);
+
+  useEffect(() => {
+    if (config) {
+      localStorage.setItem('khand_config_cache', JSON.stringify(config));
+    }
+  }, [config]);
+
+  useEffect(() => {
+    // 1. Instantly load from localStorage for lightning fast render
+    const cachedNotices = localStorage.getItem('khand_notices_cache');
+    const cachedGallery = localStorage.getItem('khand_gallery_cache');
+    const cachedConfig = localStorage.getItem('khand_config_cache');
+
+    if (cachedNotices) {
+      try { setNotices(JSON.parse(cachedNotices)); } catch (e) {}
+    } else {
+      setNotices(DEFAULT_NOTICES);
+    }
+
+    if (cachedGallery) {
+      try { setGallery(JSON.parse(cachedGallery)); } catch (e) {}
+    } else {
+      setGallery(DEFAULT_GALLERY);
+    }
+
+    if (cachedConfig) {
+      try { setConfig(JSON.parse(cachedConfig)); } catch (e) {}
+    }
+
+    // 2. Fetch from Firestore safely and gracefully merged
     const fetchData = async () => {
       try {
-        const [n, g, c] = await Promise.all([getNotices(), getGallery(), getMainConfig()]);
-        
-        // Use default notices if none exist in Firebase
-        const rawNotices = n.length > 0 ? n : DEFAULT_NOTICES;
-        
-        // Programmatically rename the notice as requested by the user, 
-        // especially since they faced difficulty deleting it
-        const processedNotices = rawNotices.map(item => {
-          if (item.title === "홈페이지 오픈") {
-            return { ...item, title: "2026년 하반기 자격증과정 오픈" };
-          }
-          return item;
-        });
-        
-        setNotices(processedNotices);
-        setGallery(g.length > 0 ? g : DEFAULT_GALLERY);
-        if (c) setConfig(c);
+        let n: any[] = [];
+        try {
+          n = await getNotices();
+        } catch (e) {
+          console.warn("Could not fetch notices from Firestore, using cache:", e);
+        }
+
+        let g: any[] = [];
+        try {
+          g = await getGallery();
+        } catch (e) {
+          console.warn("Could not fetch gallery from Firestore, using cache:", e);
+        }
+
+        let c: any = null;
+        try {
+          c = await getMainConfig();
+        } catch (e) {
+          console.warn("Could not fetch config from Firestore, using cache:", e);
+        }
+
+        if (n && n.length > 0) {
+          const processedNotices = n.map(item => {
+            if (item.title === "홈페이지 오픈") {
+              return { ...item, title: "2026년 하반기 자격증과정 오픈" };
+            }
+            return item;
+          });
+          setNotices(processedNotices);
+        }
+
+        if (g && g.length > 0) {
+          setGallery(g);
+        }
+
+        if (c) {
+          setConfig(c);
+        }
       } catch (err) {
-        console.error("Failed to fetch data", err);
+        console.error("Failed to fetch data gracefully", err);
       } finally {
         setLoading(false);
       }
@@ -1519,25 +1803,29 @@ export default function App() {
     if (!id) return;
     
     if (window.confirm("정말 이 공지를 삭제하시겠습니까?")) {
+      // 1. Instantly update local UI
+      setNotices(prev => prev.filter(n => n.id !== id));
+      
       try {
-        // Attempt to delete from Firestore first
-        // If it's a default item (not in Firestore), this might throw or do nothing
-        // We catch errors to ensure local state is updated regardless
         await deleteNotice(id);
       } catch (err) {
-        console.error("Firestore delete failed, might be a default item:", err);
-      } finally {
-        // ALWAYS update local state to provide immediate feedback
-        setNotices(prev => prev.filter(n => n.id !== id && n.title !== id));
+        console.warn("Firestore delete failed, saved and running locally with cache fallback:", err);
       }
     }
   };
 
   const handleDeleteGalleryItem = async (id: string) => {
+    if (!id) return;
+    
     if (confirm("정말 이 이미지를 삭제하시겠습니까?")) {
-      await deleteGalleryItem(id);
-      const g = await getGallery();
-      setGallery(g);
+      // 1. Instantly update local UI
+      setGallery(prev => prev.filter(item => item.id !== id));
+      
+      try {
+        await deleteGalleryItem(id);
+      } catch (err) {
+        console.warn("Firestore delete gallery item failed, saved and running locally with cache fallback:", err);
+      }
     }
   };
 
@@ -1550,6 +1838,15 @@ export default function App() {
     setIsEditModalOpen(true);
   };
 
+  const handleEditText = (field: string, title: string) => {
+    setEditTarget({ 
+      field, 
+      title, 
+      value: config?.[field] || "" 
+    });
+    setIsEditModalOpen(true);
+  };
+
   const handleEditProgramImage = (id: number) => {
     setEditTarget({ 
       field: id.toString(), 
@@ -1557,6 +1854,34 @@ export default function App() {
       value: config?.programImages?.[id] || "",
       isProgram: true
     });
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditProgramTitle = (id: number) => {
+    const defaultTitle = id === 1 ? "성인대상" : id === 2 ? "아동·청소년 대상" : "시니어 대상";
+    setEditTarget({
+      field: id.toString(),
+      title: `${id}번 프로그램 제목 수정`,
+      value: config?.programTitles?.[id] || defaultTitle,
+      isProgramTitle: true
+    } as any);
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditProgramBullets = (id: number) => {
+    const defaultBullets = id === 1 
+      ? ["스트레스 완화와 정서 안정", "공예 활동을 통한 집중과 마음 환기", "편안한 소통과 심리적 휴식"]
+      : id === 2 
+      ? ["정서 안정과 심리적 지지", "자존감 및 자기표현 향상", "협동심과 사회성 발달"]
+      : ["인지 자극과 집중력 향상", "손작업을 통한 정서 안정", "사회적 교류와 활기찬 여가 활동"];
+
+    const currentBullets = config?.programBullets?.[id] || defaultBullets;
+    setEditTarget({
+      field: id.toString(),
+      title: `${id}번 프로그램 특징(줄 바꿈으로 구분) 수정`,
+      value: currentBullets.join('\n'),
+      isProgramBullets: true
+    } as any);
     setIsEditModalOpen(true);
   };
 
@@ -1599,13 +1924,33 @@ export default function App() {
     if (!editTarget) return;
     
     if ((editTarget as any).isGallery) {
+      const newImgUrl = data;
+      let nextGallery = [...gallery];
+      
       if (editTarget.field === 'new' || editTarget.field === 'dynamic-new') {
-        await addGalleryItem({ src: data, title: '협회 활동', category: '전체' });
+        const newItem = { id: 'local_' + Date.now(), src: newImgUrl, title: '협회 활동', category: '전체' };
+        nextGallery = [newItem, ...gallery];
+        setGallery(nextGallery);
+        try {
+          await addGalleryItem({ src: newImgUrl, title: '협회 활동', category: '전체' });
+        } catch (e) {
+          console.warn("Firestore addGalleryItem failed, relying on local cache:", e);
+        }
       } else if (editTarget.field) {
-        await updateGalleryItem(editTarget.field, { src: data });
+        nextGallery = gallery.map(item => {
+          if (item.id === editTarget.field) {
+            return { ...item, src: newImgUrl };
+          }
+          return item;
+        });
+        setGallery(nextGallery);
+        try {
+          await updateGalleryItem(editTarget.field, { src: newImgUrl });
+        } catch (e) {
+          console.warn("Firestore updateGalleryItem failed, relying on local cache:", e);
+        }
       }
-      const g = await getGallery();
-      setGallery(g.length > 0 ? g : DEFAULT_GALLERY);
+      
     } else if ((editTarget as any).isNotice) {
       const { title, badge, content } = data;
       if (!title || !badge) {
@@ -1613,30 +1958,57 @@ export default function App() {
         return;
       }
       
-      try {
-        if (editTarget.field === 'newNotice') {
-          const date = new Date().toISOString().split('T')[0].replace(/-/g, '.');
+      let nextNotices = [...notices];
+      if (editTarget.field === 'newNotice') {
+        const date = new Date().toISOString().split('T')[0].replace(/-/g, '.');
+        const newNoticeItem = { id: 'local_notice_' + Date.now(), title, date, badge, content: content || "" };
+        nextNotices = [newNoticeItem, ...notices];
+        setNotices(nextNotices);
+        try {
           await addNotice({ title, date, badge, content: content || "" });
-        } else {
-          await updateNotice(editTarget.field, { title, badge, content: content || "" });
+        } catch (err) {
+          console.warn("Firestore addNotice failed, relying on local cache:", err);
         }
-        const n = await getNotices();
-        setNotices(n.length > 0 ? n : DEFAULT_NOTICES);
-      } catch (err) {
-        alert("저장에 실패했습니다. 관리자 권한을 확인해주세요.");
-        console.error(err);
+      } else {
+        nextNotices = notices.map(n => {
+          if (n.id === editTarget.field) {
+            return { ...n, title, badge, content: content || "" };
+          }
+          return n;
+        });
+        setNotices(nextNotices);
+        try {
+          await updateNotice(editTarget.field, { title, badge, content: content || "" });
+        } catch (err) {
+          console.warn("Firestore updateNotice failed, relying on local cache:", err);
+        }
       }
+      
     } else {
       let newConfig;
       if (editTarget.isProgram) {
         const programImages = { ...(config?.programImages || {}) };
         programImages[editTarget.field] = data;
         newConfig = { ...config, programImages };
+      } else if ((editTarget as any).isProgramTitle) {
+        const programTitles = { ...(config?.programTitles || {}) };
+        programTitles[editTarget.field] = data;
+        newConfig = { ...config, programTitles };
+      } else if ((editTarget as any).isProgramBullets) {
+        const programBullets = { ...(config?.programBullets || {}) };
+        programBullets[editTarget.field] = data.split('\n').map((line: string) => line.trim()).filter(Boolean);
+        newConfig = { ...config, programBullets };
       } else {
         newConfig = { ...config, [editTarget.field]: data };
       }
-      await updateMainConfig(newConfig);
+      
+      // Update UI first
       setConfig(newConfig);
+      try {
+        await updateMainConfig(newConfig);
+      } catch (err) {
+        console.warn("Firestore updateMainConfig failed, relying on local cache:", err);
+      }
     }
     setIsEditModalOpen(false);
   };
@@ -1653,13 +2025,31 @@ export default function App() {
       
       {/* Mobile-Friendly Main Content Area */}
       <main className="flex-grow">
-        <Hero config={config} onEditImage={isAdmin ? handleEditConfigImage : undefined as any} />
-        <Mission config={config} onEditImage={isAdmin ? handleEditConfigImage : undefined as any} />
-        <About config={config} onEditImage={isAdmin ? handleEditConfigImage : undefined as any} />
-        <Programs config={config} onEditProgramImage={isAdmin ? handleEditProgramImage : undefined as any} />
+        <Hero 
+          config={config} 
+          onEditImage={isAdmin ? handleEditConfigImage : undefined} 
+          onEditText={isAdmin ? handleEditText : undefined} 
+        />
+        <Mission 
+          config={config} 
+          onEditImage={isAdmin ? handleEditConfigImage : undefined} 
+          onEditText={isAdmin ? handleEditText : undefined} 
+        />
+        <About 
+          config={config} 
+          onEditImage={isAdmin ? handleEditConfigImage : undefined} 
+          onEditText={isAdmin ? handleEditText : undefined} 
+        />
+        <Programs 
+          config={config} 
+          onEditProgramImage={isAdmin ? handleEditProgramImage : undefined} 
+          onEditProgramTitle={isAdmin ? handleEditProgramTitle : undefined}
+          onEditProgramBullets={isAdmin ? handleEditProgramBullets : undefined}
+        />
+        <HealingClasses />
         <Certification 
           config={config} 
-          onEditImage={isAdmin ? handleEditConfigImage : undefined as any} 
+          onEditImage={isAdmin ? handleEditConfigImage : undefined} 
           onOpenApply={() => setIsApplyModalOpen(true)}
           isAdmin={isAdmin}
           onOpenAdminView={() => setIsAdminViewModalOpen(true)}
