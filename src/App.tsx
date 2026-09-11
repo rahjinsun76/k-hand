@@ -1,3 +1,4 @@
+// 한국공예치료사협회 K-Hand Web App (v1.1.0 - 카카오톡 상담 연동)
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
@@ -40,32 +41,87 @@ import {
   LogOut,
   User as UserIcon,
   ClipboardList,
-  Image as ImageIcon
+  Image as ImageIcon,
+  MessageCircle,
+  Search,
+  Copy,
+  Check,
+  UserCheck
 } from 'lucide-react';
 
 // --- Constants ---
 const DEFAULT_NOTICES = [
-  { date: "2026.05.10", title: "하반기 협회 정기 교육 신청 안내 (선착순)", badge: "중요" },
-  { date: "2026.05.01", title: "5월 가정의 달 기념 특강 일정 안내", badge: "교육" },
-  { date: "2026.04.15", title: "협회 홈페이지 리뉴얼 이벤트 결과 발표", badge: "이벤트" }
+  { id: 'notice_default_1', date: "2026.05.10", title: "하반기 협회 정기 교육 신청 안내 (선착순)", badge: "중요" },
+  { id: 'notice_default_2', date: "2026.05.01", title: "5월 가정의 달 기념 특강 일정 안내", badge: "교육" },
+  { id: 'notice_default_3', date: "2026.04.15", title: "협회 홈페이지 리뉴얼 이벤트 결과 발표", badge: "이벤트" }
 ];
 
 const DEFAULT_GALLERY = [
-  { src: 'https://images.unsplash.com/photo-1513519245088-0e12902e15cb?auto=format&fit=crop&q=80&w=800', title: '한지 공예 램프', category: '자격증' },
-  { src: 'https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?auto=format&fit=crop&q=80&w=800', title: '퀸링 플라워 아트', category: '성인' },
-  { src: 'https://images.unsplash.com/photo-1506806732259-39c2d4a78ae7?auto=format&fit=crop&q=80&w=800', title: '아동 단체 수업', category: '아동' },
-  { src: 'https://images.unsplash.com/photo-1490312278390-ab64016e0aa9?auto=format&fit=crop&q=80&w=800', title: '아기 한복 공예', category: '아동' },
-  { src: 'https://images.unsplash.com/photo-1544411047-c491e34a2450?auto=format&fit=crop&q=80&w=800', title: '협회 워크숍', category: '전체' },
-  { src: 'https://images.unsplash.com/photo-1513519245088-0e12902e15cb?auto=format&fit=crop&q=80&w=800', title: '작품 전시', category: '전체' },
-  { src: 'https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&q=80&w=800', title: '아동 창의 공예', category: '아동' },
-  { src: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=800', title: '어르신 치유 프로그램', category: '노인' },
-  { src: 'https://images.unsplash.com/photo-1605722243979-fe0be8158232?auto=format&fit=crop&q=80&w=800', title: '자수 작업', category: '성인' },
-  { src: 'https://images.unsplash.com/photo-1544256718-3bcf237f3974?auto=format&fit=crop&q=80&w=800', title: '페이퍼 아트 클래스', category: '성인' },
-  { src: 'https://images.unsplash.com/photo-1540324153951-891179631b44?auto=format&fit=crop&q=80&w=800', title: '목공예 실습', category: '자격증' },
-  { src: 'https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&q=80&w=800', title: '협회 봉사 활동', category: '전체' }
+  { id: 'gallery_default_1', src: 'https://images.unsplash.com/photo-1513519245088-0e12902e15cb?auto=format&fit=crop&q=80&w=800', title: '한지 공예 램프', category: '자격증' },
+  { id: 'gallery_default_2', src: 'https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?auto=format&fit=crop&q=80&w=800', title: '퀸링 플라워 아트', category: '성인' },
+  { id: 'gallery_default_3', src: 'https://images.unsplash.com/photo-1506806732259-39c2d4a78ae7?auto=format&fit=crop&q=80&w=800', title: '아동 단체 수업', category: '아동' },
+  { id: 'gallery_default_4', src: 'https://images.unsplash.com/photo-1490312278390-ab64016e0aa9?auto=format&fit=crop&q=80&w=800', title: '아기 한복 공예', category: '아동' },
+  { id: 'gallery_default_5', src: 'https://images.unsplash.com/photo-1544411047-c491e34a2450?auto=format&fit=crop&q=80&w=800', title: '협회 워크숍', category: '전체' },
+  { id: 'gallery_default_6', src: 'https://images.unsplash.com/photo-1513519245088-0e12902e15cb?auto=format&fit=crop&q=80&w=800', title: '작품 전시', category: '전체' },
+  { id: 'gallery_default_7', src: 'https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&q=80&w=800', title: '아동 창의 공예', category: '아동' },
+  { id: 'gallery_default_8', src: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=800', title: '어르신 치유 프로그램', category: '노인' },
+  { id: 'gallery_default_9', src: 'https://images.unsplash.com/photo-1605722243979-fe0be8158232?auto=format&fit=crop&q=80&w=800', title: '자수 작업', category: '성인' },
+  { id: 'gallery_default_10', src: 'https://images.unsplash.com/photo-1544256718-3bcf237f3974?auto=format&fit=crop&q=80&w=800', title: '페이퍼 아트 클래스', category: '성인' },
+  { id: 'gallery_default_11', src: 'https://images.unsplash.com/photo-1540324153951-891179631b44?auto=format&fit=crop&q=80&w=800', title: '목공예 실습', category: '자격증' },
+  { id: 'gallery_default_12', src: 'https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&q=80&w=800', title: '협회 봉사 활동', category: '전체' }
 ];
 
 // --- Components ---
+
+const ConfirmDeleteModal = ({
+  isOpen,
+  onClose,
+  onConfirm,
+  title = "삭제 확인",
+  description = "정말 삭제하시겠습니까? 삭제된 데이터는 즉시 목록에서 제외됩니다."
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+  title?: string;
+  description?: string;
+}) => {
+  if (!isOpen) return null;
+  return (
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[300] flex items-center justify-center p-6">
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="bg-white rounded-[32px] p-8 w-full max-w-sm shadow-2xl text-center"
+      >
+        <div className="w-16 h-16 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-sm">
+          <Trash2 size={32} />
+        </div>
+        <h3 className="text-xl font-bold text-slate-900 mb-2">{title}</h3>
+        <p className="text-sm text-slate-500 mb-6 leading-relaxed break-keep">{description}</p>
+        <div className="flex gap-3">
+          <button 
+            type="button"
+            onClick={onClose} 
+            className="flex-1 py-3.5 rounded-2xl font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors cursor-pointer"
+          >
+            취소
+          </button>
+          <button 
+            type="button"
+            onClick={() => {
+              onConfirm();
+              onClose();
+            }} 
+            className="flex-1 py-3.5 rounded-2xl font-bold text-white bg-red-600 hover:bg-red-700 shadow-lg shadow-red-600/20 transition-colors cursor-pointer"
+          >
+            삭제하기
+          </button>
+        </div>
+      </motion.div>
+    </div>
+  );
+};
 
 const EditModal = ({ 
   isOpen, 
@@ -73,6 +129,7 @@ const EditModal = ({
   title, 
   initialValue, 
   onSave,
+  onDelete,
   isNotice = false
 }: { 
   isOpen: boolean; 
@@ -80,6 +137,7 @@ const EditModal = ({
   title: string; 
   initialValue: string | { title: string; badge: string; content: string }; 
   onSave: (value: any) => void;
+  onDelete?: () => void;
   isNotice?: boolean;
 }) => {
   const [value, setValue] = useState(typeof initialValue === 'string' ? initialValue : '');
@@ -255,16 +313,28 @@ const EditModal = ({
             </>
           )}
           
+          {onDelete && (
+            <button 
+              type="button"
+              onClick={onDelete}
+              className="w-full py-3.5 mb-3 rounded-2xl font-bold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 text-sm flex items-center justify-center gap-2 transition-colors cursor-pointer"
+            >
+              <Trash2 size={16} /> 이 활동 사진 삭제하기
+            </button>
+          )}
+
           <div className="flex gap-3">
             <button 
+              type="button"
               onClick={onClose}
-              className="flex-1 py-4 rounded-2xl font-bold text-slate-500 hover:bg-slate-50 transition-all"
+              className="flex-1 py-4 rounded-2xl font-bold text-slate-500 hover:bg-slate-50 transition-all cursor-pointer"
             >
               취소
             </button>
             <button 
+              type="button"
               onClick={handleNoticeSave}
-              className="flex-1 py-4 rounded-2xl font-bold bg-primary text-white shadow-lg shadow-primary/20 hover:bg-primary-dark transition-all"
+              className="flex-1 py-4 rounded-2xl font-bold bg-primary text-white shadow-lg shadow-primary/20 hover:bg-primary-dark transition-all cursor-pointer"
             >
               저장하기
             </button>
@@ -1028,45 +1098,53 @@ const Gallery = ({ items, isAdmin, onDelete, onEdit, onAdd, user, onLogin }: { i
         </div>
         
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-          {items.map((img, i) => (
-            <motion.div 
-              key={img.id || i} 
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.05 }}
-              className="aspect-square rounded-2xl overflow-hidden cursor-pointer relative group bg-slate-100"
-              onClick={() => isAdmin && onEdit(img)}
-            >
-               <motion.img 
-                 src={img.src || undefined} 
-                 className="w-full h-full object-cover" 
-                 referrerPolicy="no-referrer" 
-                 alt={`${img.title || "한국공예치료사협회"} - 공예치료 활동 사진`}
-                 loading="lazy"
-                 decoding="async"
-                 animate={{ scale: [1, 1.1, 1] }}
-                 transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-                 whileHover={{ scale: 1.1 }}
-               />
-               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <span className="text-white font-bold border-2 border-white px-4 py-2">{img.title}</span>
-                  {isAdmin && (
-                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-[10px] text-white">
-                      클릭하여 수정
-                    </div>
-                  )}
-               </div>
-               {isAdmin && img.id && (
-                 <button 
-                   onClick={(e) => { e.stopPropagation(); onDelete(img.id); }}
-                   className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-20"
-                 >
-                   <Trash2 size={16} />
-                 </button>
-               )}
-            </motion.div>
-          ))}
+          {items.map((img, i) => {
+            const itemId = img.id || `gallery_${i}`;
+            return (
+              <motion.div 
+                key={itemId} 
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.05 }}
+                className="aspect-square rounded-2xl overflow-hidden cursor-pointer relative group bg-slate-100 shadow-sm"
+                onClick={() => isAdmin && onEdit({ ...img, id: itemId })}
+              >
+                 <motion.img 
+                   src={img.src || undefined} 
+                   className="w-full h-full object-cover" 
+                   referrerPolicy="no-referrer" 
+                   alt={`${img.title || "한국공예치료사협회"} - 공예치료 활동 사진`}
+                   loading="lazy"
+                   decoding="async"
+                   animate={{ scale: [1, 1.05, 1] }}
+                   transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+                   whileHover={{ scale: 1.08 }}
+                 />
+                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                    <span className="text-white font-bold border-2 border-white px-4 py-2 text-center text-sm">{img.title}</span>
+                    {isAdmin && (
+                      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/25 backdrop-blur-md px-3 py-1 rounded-full text-[11px] text-white font-medium">
+                        클릭하여 수정
+                      </div>
+                    )}
+                 </div>
+                 {isAdmin && (
+                   <button 
+                     type="button"
+                     onClick={(e) => { 
+                       e.stopPropagation(); 
+                       onDelete(itemId); 
+                     }}
+                     className="absolute top-2.5 right-2.5 p-2.5 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-lg z-30 transition-transform hover:scale-110 active:scale-95 cursor-pointer flex items-center justify-center"
+                     title="활동 사진 삭제"
+                   >
+                     <Trash2 size={16} />
+                   </button>
+                 )}
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -1127,6 +1205,7 @@ const AdminViewApplicationsModal = ({
 }) => {
   const [apps, setApps] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -1142,10 +1221,9 @@ const AdminViewApplicationsModal = ({
   };
 
   const handleDelete = async (id: string) => {
-    if (window.confirm("이 신청 내역을 삭제하시겠습니까?")) {
-      await deleteApplication(id);
-      loadApps();
-    }
+    await deleteApplication(id);
+    setConfirmDeleteId(null);
+    loadApps();
   };
 
   if (!isOpen) return null;
@@ -1180,12 +1258,30 @@ const AdminViewApplicationsModal = ({
                     </span>
                     <h4 className="text-xl font-bold text-slate-800">{app.name}</h4>
                   </div>
-                  <button 
-                    onClick={() => handleDelete(app.id)}
-                    className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
-                  >
-                    <X size={18} />
-                  </button>
+                  {confirmDeleteId === app.id ? (
+                    <div className="flex items-center gap-1.5">
+                      <button 
+                        onClick={() => handleDelete(app.id)}
+                        className="px-3 py-1.5 text-xs font-bold text-white bg-red-600 rounded-xl hover:bg-red-700 transition-all cursor-pointer shadow-sm"
+                      >
+                        삭제
+                      </button>
+                      <button 
+                        onClick={() => setConfirmDeleteId(null)}
+                        className="px-2.5 py-1.5 text-xs font-bold text-slate-500 bg-slate-200 rounded-xl hover:bg-slate-300 transition-all cursor-pointer"
+                      >
+                        취소
+                      </button>
+                    </div>
+                  ) : (
+                    <button 
+                      onClick={() => setConfirmDeleteId(app.id)}
+                      className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all cursor-pointer"
+                      title="신청 내역 삭제"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  )}
                 </div>
                 <div className="grid md:grid-cols-2 gap-4 text-sm text-slate-500 mb-4">
                   <div className="flex items-center gap-2">
@@ -1524,6 +1620,14 @@ const Mission = ({ config, onEditImage, onEditText }: { config: any, onEditImage
 };
 
 const Contact = ({ config, onEditImage }: { config: any, onEditImage?: (field: string) => void }) => {
+  const [copiedId, setCopiedId] = useState(false);
+
+  const handleCopyId = () => {
+    navigator.clipboard.writeText("K-HAND");
+    setCopiedId(true);
+    setTimeout(() => setCopiedId(false), 2500);
+  };
+
   return (
     <section id="contact" className="bg-slate-50 py-24">
       <div className="section-container">
@@ -1539,9 +1643,9 @@ const Contact = ({ config, onEditImage }: { config: any, onEditImage?: (field: s
                 전문 담당자가 친절하게 안내해 드립니다.
               </p>
               
-              <div className="space-y-6">
+              <div className="space-y-4">
                  <div className="flex items-center gap-6 p-6 rounded-3xl bg-white border border-slate-100 shadow-sm">
-                    <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
+                    <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary shrink-0">
                        <Phone size={28} />
                     </div>
                     <div>
@@ -1552,9 +1656,90 @@ const Contact = ({ config, onEditImage }: { config: any, onEditImage?: (field: s
                       </div>
                     </div>
                  </div>
+
+                 {/* 1. 카카오톡 오픈채팅 바로가기 (유지) */}
+                 <a 
+                   href="https://open.kakao.com/o/phOl9LLi" 
+                   target="_blank" 
+                   rel="noreferrer"
+                   className="flex items-center justify-between p-6 rounded-3xl bg-[#FEE500]/15 hover:bg-[#FEE500]/30 border border-[#FEE500]/60 shadow-sm transition-all group"
+                 >
+                    <div className="flex items-center gap-6">
+                      <div className="w-16 h-16 bg-[#FEE500] rounded-2xl flex items-center justify-center text-[#371D1E] shadow-sm shrink-0">
+                         <MessageCircle size={30} className="fill-[#371D1E]" />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-xs bg-[#371D1E] text-[#FEE500] px-2.5 py-0.5 rounded-full font-bold">오픈채팅</span>
+                          <span className="text-xs text-amber-900 font-bold">실시간 상담</span>
+                        </div>
+                        <p className="text-xl font-black text-slate-900 group-hover:text-primary transition-colors">
+                          오픈채팅 공예심리사 바로가기
+                        </p>
+                      </div>
+                    </div>
+                    <div className="w-10 h-10 rounded-full bg-white/80 flex items-center justify-center text-[#371D1E] group-hover:scale-110 transition-transform shrink-0">
+                      <ExternalLink size={20} />
+                    </div>
+                 </a>
+
+                 {/* 2. 카카오톡 1:1 개인 상담 (카톡 ID: K-HAND) */}
+                 <div className="p-6 rounded-3xl bg-white border-2 border-[#FEE500] shadow-sm relative overflow-hidden">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                      <div className="flex items-center gap-5">
+                        <div className="w-16 h-16 bg-[#FEE500] rounded-2xl flex items-center justify-center text-[#371D1E] shadow-sm shrink-0">
+                           <UserCheck size={28} className="text-[#371D1E]" />
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-xs bg-primary text-white px-2.5 py-0.5 rounded-full font-bold">1:1 개인상담</span>
+                            <span className="text-xs text-slate-500 font-bold">카카오톡 ID 검색</span>
+                          </div>
+                          <div className="flex items-baseline gap-2">
+                            <span className="text-xs text-slate-400 font-bold">카톡 ID</span>
+                            <span className="text-2xl font-black text-slate-900 tracking-wider font-mono">K-HAND</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={handleCopyId}
+                          type="button"
+                          className={`px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-1.5 transition-all shadow-sm cursor-pointer ${
+                            copiedId 
+                              ? 'bg-emerald-600 text-white' 
+                              : 'bg-[#FEE500] text-[#371D1E] hover:bg-[#FEE500]/80'
+                          }`}
+                        >
+                          {copiedId ? (
+                            <>
+                              <Check size={14} /> ID 복사완료!
+                            </>
+                          ) : (
+                            <>
+                              <Copy size={14} /> ID 복사하기
+                            </>
+                          )}
+                        </button>
+                        <a
+                          href="kakaotalk://addfriend?id=K-HAND"
+                          className="px-3.5 py-2.5 rounded-xl font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors flex items-center gap-1"
+                          title="모바일 카카오톡 앱 열기"
+                        >
+                          카톡 열기
+                        </a>
+                      </div>
+                    </div>
+                    
+                    <p className="text-xs text-slate-500 mt-3 pt-3 border-t border-slate-100 flex items-center gap-1.5 break-keep">
+                      <span className="shrink-0">💬</span> 
+                      <span>카카오톡 상단 <strong>친구추가(👤+)</strong> &gt; <strong>[ID로 추가]</strong>에서 <strong className="text-slate-900 font-bold underline decoration-[#FEE500] decoration-2">K-HAND</strong>를 검색해 1:1 상담을 시작하세요.</span>
+                    </p>
+                 </div>
                  
                  <div className="flex items-center gap-6 p-6 rounded-3xl bg-white border border-slate-100 shadow-sm">
-                    <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
+                    <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary shrink-0">
                        <Mail size={28} />
                     </div>
                     <div>
@@ -1563,7 +1748,16 @@ const Contact = ({ config, onEditImage }: { config: any, onEditImage?: (field: s
                     </div>
                  </div>
 
-                 <div className="flex gap-4 pt-8">
+                 <div className="flex gap-4 pt-4">
+                    <a 
+                      href="https://open.kakao.com/o/phOl9LLi" 
+                      target="_blank" 
+                      rel="noreferrer"
+                      className="w-14 h-14 bg-[#FEE500] rounded-2xl flex items-center justify-center text-[#371D1E] hover:scale-105 transition-all shadow-sm"
+                      title="카카오톡 오픈채팅"
+                    >
+                        <MessageCircle size={24} className="fill-[#371D1E]" />
+                    </a>
                     <a 
                       href="https://blog.naver.com/sewingtherapy" 
                       target="_blank" 
@@ -1667,26 +1861,33 @@ export default function App() {
   const [isAdminViewModalOpen, setIsAdminViewModalOpen] = useState(false);
   const [selectedNotice, setSelectedNotice] = useState<any>(null);
   const [editTarget, setEditTarget] = useState<{ field: string, title: string, value: any, isProgram?: boolean } | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<{
+    isOpen: boolean;
+    type: 'gallery' | 'notice';
+    id: string;
+    title?: string;
+    description?: string;
+  } | null>(null);
 
   useEffect(() => {
     console.log("App loaded - K-Hand Association - Production Mode");
     const unsub = onAuthStateChanged(auth, (u) => {
       setUser(u);
       // Hardcoded admin for simplicity as requested/typical for these applets
-      setIsAdmin(u?.email === 'rahjinsun76@gmail.com');
+      setIsAdmin(u?.email?.toLowerCase() === 'rahjinsun76@gmail.com');
     });
     return () => unsub();
   }, []);
 
   // Sync to localStorage
   useEffect(() => {
-    if (notices && notices.length > 0) {
+    if (notices) {
       localStorage.setItem('khand_notices_cache', JSON.stringify(notices));
     }
   }, [notices]);
 
   useEffect(() => {
-    if (gallery && gallery.length > 0) {
+    if (gallery) {
       localStorage.setItem('khand_gallery_cache', JSON.stringify(gallery));
     }
   }, [gallery]);
@@ -1704,13 +1905,25 @@ export default function App() {
     const cachedConfig = localStorage.getItem('khand_config_cache');
 
     if (cachedNotices) {
-      try { setNotices(JSON.parse(cachedNotices)); } catch (e) {}
+      try { 
+        const parsed = JSON.parse(cachedNotices);
+        setNotices(parsed.map((item: any, idx: number) => ({
+          ...item,
+          id: item.id || `notice_default_${idx + 1}`
+        }))); 
+      } catch (e) {}
     } else {
       setNotices(DEFAULT_NOTICES);
     }
 
     if (cachedGallery) {
-      try { setGallery(JSON.parse(cachedGallery)); } catch (e) {}
+      try { 
+        const parsed = JSON.parse(cachedGallery);
+        setGallery(parsed.map((item: any, idx: number) => ({
+          ...item,
+          id: item.id || `gallery_default_${idx + 1}`
+        }))); 
+      } catch (e) {}
     } else {
       setGallery(DEFAULT_GALLERY);
     }
@@ -1799,34 +2012,57 @@ export default function App() {
     setIsEditModalOpen(true);
   };
 
-  const handleDeleteNotice = async (id: string) => {
+  const handleDeleteNotice = (id: string) => {
     if (!id) return;
-    
-    if (window.confirm("정말 이 공지를 삭제하시겠습니까?")) {
-      // 1. Instantly update local UI
-      setNotices(prev => prev.filter(n => n.id !== id));
-      
-      try {
-        await deleteNotice(id);
-      } catch (err) {
-        console.warn("Firestore delete failed, saved and running locally with cache fallback:", err);
-      }
-    }
+    setDeleteTarget({
+      isOpen: true,
+      type: 'notice',
+      id,
+      title: "공지사항 삭제",
+      description: "선택하신 공지사항을 삭제하시겠습니까?"
+    });
   };
 
-  const handleDeleteGalleryItem = async (id: string) => {
+  const handleDeleteGalleryItem = (id: string) => {
     if (!id) return;
-    
-    if (confirm("정말 이 이미지를 삭제하시겠습니까?")) {
-      // 1. Instantly update local UI
-      setGallery(prev => prev.filter(item => item.id !== id));
-      
+    setDeleteTarget({
+      isOpen: true,
+      type: 'gallery',
+      id,
+      title: "활동 사진 삭제",
+      description: "선택하신 협회 활동 사진을 삭제하시겠습니까? 삭제 즉시 갤러리 목록에서 제외됩니다."
+    });
+  };
+
+  const executeConfirmDelete = async () => {
+    if (!deleteTarget) return;
+    const { type, id } = deleteTarget;
+
+    if (type === 'gallery') {
+      const nextGallery = gallery.filter((item, idx) => 
+        item.id !== id && item.src !== id && `gallery_${idx}` !== id
+      );
+      setGallery(nextGallery);
+      localStorage.setItem('khand_gallery_cache', JSON.stringify(nextGallery));
+
       try {
         await deleteGalleryItem(id);
       } catch (err) {
-        console.warn("Firestore delete gallery item failed, saved and running locally with cache fallback:", err);
+        console.warn("Firestore delete gallery item skipped or cached:", err);
+      }
+    } else if (type === 'notice') {
+      const nextNotices = notices.filter(n => n.id !== id);
+      setNotices(nextNotices);
+      localStorage.setItem('khand_notices_cache', JSON.stringify(nextNotices));
+
+      try {
+        await deleteNotice(id);
+      } catch (err) {
+        console.warn("Firestore delete notice skipped or cached:", err);
       }
     }
+
+    setDeleteTarget(null);
   };
 
   const handleEditConfigImage = (field: string) => {
@@ -2111,9 +2347,10 @@ export default function App() {
            
            <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 text-slate-600 text-sm font-bold">
              <p>© 2026 한국공예치료사 협회 K-Hand. All rights reserved.</p>
-             <div className="flex gap-6">
-                <a href="https://blog.naver.com/sewingtherapy" target="_blank" rel="noreferrer" title="네이버 블로그"><BookOpen size={20} /></a>
-                <a href="https://www.instagram.com/korea_hand_healing_art?igsh=cDl0cGFkN2twd2l6" target="_blank" rel="noreferrer" title="인스타그램"><Instagram size={20} /></a>
+             <div className="flex gap-6 items-center">
+                <a href="https://open.kakao.com/o/phOl9LLi" target="_blank" rel="noreferrer" title="카카오톡 오픈채팅" className="hover:text-[#FEE500] transition-colors"><MessageCircle size={20} className="fill-current" /></a>
+                <a href="https://blog.naver.com/sewingtherapy" target="_blank" rel="noreferrer" title="네이버 블로그" className="hover:text-white transition-colors"><BookOpen size={20} /></a>
+                <a href="https://www.instagram.com/korea_hand_healing_art?igsh=cDl0cGFkN2twd2l6" target="_blank" rel="noreferrer" title="인스타그램" className="hover:text-white transition-colors"><Instagram size={20} /></a>
              </div>
            </div>
         </div>
@@ -2141,7 +2378,24 @@ export default function App() {
         title={editTarget?.title || ""}
         initialValue={editTarget?.value || ""}
         onSave={saveEdit}
+        onDelete={
+          (editTarget as any)?.isGallery && editTarget?.field !== 'new'
+            ? () => {
+                const targetId = (editTarget as any).item?.id || editTarget?.field;
+                setIsEditModalOpen(false);
+                handleDeleteGalleryItem(targetId);
+              }
+            : undefined
+        }
         isNotice={(editTarget as any)?.isNotice}
+      />
+
+      <ConfirmDeleteModal 
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={executeConfirmDelete}
+        title={deleteTarget?.title}
+        description={deleteTarget?.description}
       />
     </div>
   );

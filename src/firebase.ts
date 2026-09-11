@@ -190,14 +190,45 @@ export const updateMainConfig = async (data: any) => {
   }
 };
 
+export const sendEmailNotification = async (data: { name: string; phone: string; email: string; program: string; message: string }) => {
+  try {
+    const res = await fetch('https://formsubmit.co/ajax/nanalaa@naver.com', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        _subject: `[한국공예치료사협회] 새 수강/상담 신청: ${data.name}님 (${data.program})`,
+        "신청자 성함": data.name,
+        "연락처": data.phone,
+        "신청자 이메일": data.email || "미입력",
+        "신청 과정": data.program,
+        "문의 및 요청사항": data.message || "없음",
+        "접수일시": new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }),
+        _template: "table"
+      })
+    });
+    return res.ok;
+  } catch (error) {
+    console.warn("이메일 발송 알림 오류 (DB에는 안전하게 저장됨):", error);
+    return false;
+  }
+};
+
 export const addApplication = async (data: { name: string; phone: string; email: string; program: string; message: string }) => {
   const path = 'applications';
   try {
-    return await addDoc(collection(db, path), {
+    const docRef = await addDoc(collection(db, path), {
       ...data,
       status: 'pending',
       createdAt: serverTimestamp(),
     });
+
+    // nanalaa@naver.com 네이버 메일로 실시간 알림 전송 (비동기 백그라운드)
+    sendEmailNotification(data).catch(() => {});
+
+    return docRef;
   } catch (error) {
     handleFirestoreError(error, OperationType.CREATE, path);
   }
