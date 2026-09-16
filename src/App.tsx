@@ -46,7 +46,8 @@ import {
   Search,
   Copy,
   Check,
-  UserCheck
+  UserCheck,
+  MapPin
 } from 'lucide-react';
 
 // --- Constants ---
@@ -1748,6 +1749,18 @@ const Contact = ({ config, onEditImage }: { config: any, onEditImage?: (field: s
                     </div>
                  </div>
 
+                 <div className="flex items-center gap-6 p-6 rounded-3xl bg-white border border-slate-100 shadow-sm">
+                    <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary shrink-0">
+                       <MapPin size={28} />
+                    </div>
+                    <div>
+                      <p className="text-xs text-slate-400 font-bold mb-1">협회 주소</p>
+                      <p className="text-lg md:text-xl font-bold text-slate-900 break-keep">
+                        {config?.address || "성남시 분당구 돌마로80 2층 145호,146호"}
+                      </p>
+                    </div>
+                 </div>
+
                  <div className="flex gap-4 pt-4">
                     <a 
                       href="https://open.kakao.com/o/phOl9LLi" 
@@ -2319,8 +2332,12 @@ export default function App() {
            <div className="grid md:grid-cols-3 gap-16 mb-16">
               <div>
                 <h2 className="text-2xl font-black tracking-tighter mb-4">K-Hand</h2>
-                <p className="text-slate-500 leading-relaxed max-w-xs break-keep">
+                <p className="text-slate-500 leading-relaxed max-w-xs break-keep mb-3">
                     한국공예치료사 협회는 공예를 통해 사람의 마음을 치유하고 더 나은 삶을 만드는 전문가 집단입니다.
+                </p>
+                <p className="text-xs text-slate-400 flex items-center gap-1.5 break-keep">
+                  <MapPin size={14} className="text-primary shrink-0" />
+                  <span>{config?.address || "성남시 분당구 돌마로80 2층 145호,146호"}</span>
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-8 md:col-span-2">
