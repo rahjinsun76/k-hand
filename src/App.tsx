@@ -47,7 +47,8 @@ import {
   Copy,
   Check,
   UserCheck,
-  MapPin
+  MapPin,
+  Award
 } from 'lucide-react';
 
 // --- Constants ---
@@ -1530,48 +1531,108 @@ const Notice = ({
   );
 };
 
-const Mission = ({ config, onEditImage, onEditText }: { config: any, onEditImage: (field: string) => void, onEditText?: (field: string, label: string) => void }) => {
+const Mission = ({ config, onEditImage, onEditText }: { config: any, onEditImage?: (field: string) => void, onEditText?: (field: string, label: string) => void }) => {
+  const missionTitle = (!config?.missionTitle || config?.missionTitle === "협회 소개") 
+    ? "한국공예치료사협회" 
+    : config.missionTitle;
+
+  const missionSubtitle = config?.missionSubtitle || "공예를 매개로 마음을 이해하고,\n사람과 삶을 연결하는 공예심리를 연구합니다.";
+
+  const defaultDesc = "본 협회는 심리학 및 예술치료 전문 전공자들의 학문적 이론과 임상적 지식을 바탕으로, 공예 매체의 심리적 기제를 정교하게 분석합니다. 대상과 환경에 체계적으로 맞춘 공예심리 프로그램을 연구·개발하며, 엄격한 교육과 현장 검증을 통해 공예심리 분야의 독보적인 전문성과 학문적 표준을 확립해 나가고 있습니다.";
+
+  const missionDesc = (!config?.missionDesc || 
+    config?.missionDesc.includes("삶의 온기를 회복하는 치유의 시간을 만들어갑니다") ||
+    config?.missionDesc.includes("한국공예치료사협회는 공예를 매개로"))
+    ? defaultDesc
+    : config.missionDesc;
+
   return (
-    <section id="mission" className="bg-[#004D40] py-24 text-white overflow-hidden">
-      <div className="section-container">
-        <div className="grid lg:grid-cols-2 gap-20 items-center">
-          <div className="relative group">
+    <section id="mission" className="bg-[#004D40] py-24 text-white overflow-hidden relative">
+      <div className="section-container relative z-10">
+        <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+          {/* 좌측: 대표 이미지 & 협회장 소개 카드 */}
+          <div className="lg:col-span-5 space-y-8">
+            <div className="relative group">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                className={`aspect-[4/3] rounded-[36px] overflow-hidden shadow-2xl relative ${onEditImage ? 'cursor-pointer' : ''}`}
+                onClick={() => onEditImage && onEditImage('missionImage')}
+              >
+                 <motion.img 
+                   src={config?.missionImage || "https://images.unsplash.com/photo-1544411047-c491e34a2450?auto=format&fit=crop&q=80&w=800"} 
+                   className="w-full h-full object-cover" 
+                   referrerPolicy="no-referrer" 
+                   alt="협회 소개 사진"
+                   animate={{ scale: [1, 1.05, 1] }}
+                   transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+                 />
+                 {onEditImage && (
+                    <div className="absolute bottom-5 right-5 bg-primary text-white px-3.5 py-2 rounded-full shadow-2xl flex items-center gap-2 font-bold text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                      <ImageIcon size={16} />
+                      <span>사진 변경</span>
+                    </div>
+                 )}
+              </motion.div>
+              <div className="absolute -top-10 -left-10 w-40 h-40 bg-primary/20 blur-3xl -z-10" />
+            </div>
+
+            {/* 대표 소개 카드 */}
             <motion.div 
-              initial={{ opacity: 0, scale: 0.95, x: -40 }}
-              whileInView={{ opacity: 1, scale: 1, x: 0 }}
+              initial={{ opacity: 0, y: 25 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-              className={`aspect-[4/3] rounded-[48px] overflow-hidden shadow-2xl relative ${onEditImage ? 'cursor-pointer' : ''}`}
-              onClick={() => onEditImage && onEditImage('missionImage')}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="rounded-3xl bg-white/5 border border-white/10 p-7 backdrop-blur-md shadow-xl relative overflow-hidden"
             >
-               <motion.img 
-                 src={config?.missionImage || "https://images.unsplash.com/photo-1544411047-c491e34a2450?auto=format&fit=crop&q=80&w=800"} 
-                 className="w-full h-full object-cover" 
-                 referrerPolicy="no-referrer" 
-                 alt="협회 소개 사진"
-                 animate={{ scale: [1, 1.1, 1] }}
-                 transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-               />
-               {onEditImage && (
-                  <div className="absolute bottom-6 right-6 bg-primary text-white p-4 rounded-full shadow-2xl flex items-center gap-2 font-bold text-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                    <ImageIcon size={20} />
-                    <span>사진 변경</span>
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-xs font-bold bg-[#FEE500]/20 text-[#FEE500] border border-[#FEE500]/30 px-3 py-1 rounded-full uppercase tracking-wider">
+                  대표 소개
+                </span>
+                <Award size={20} className="text-[#FEE500]" />
+              </div>
+              
+              <div className="flex items-baseline gap-3 mb-1">
+                <h4 className="text-2xl font-black text-white tracking-tight">나진선</h4>
+                <span className="text-sm font-bold text-[#FEE500]">한국공예치료사협회 대표</span>
+              </div>
+              
+              <div className="w-10 h-0.5 bg-white/20 my-4" />
+
+              <div className="space-y-2.5">
+                {[
+                  "임상심리사 2급 · 예술학석사(예술치료)",
+                  "단국대학교 예술치료 전공",
+                  "단국대학교 전통복식 전공 대학원 수학(修學)",
+                  "한복학원 원장"
+                ].map((item, idx) => (
+                  <div key={idx} className="flex items-start gap-2.5">
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#FEE500] mt-2 shrink-0" />
+                    <p className="text-sm text-white/90 font-medium leading-relaxed break-keep">{item}</p>
                   </div>
-               )}
+                ))}
+              </div>
             </motion.div>
-            <div className="absolute -top-10 -left-10 w-40 h-40 bg-primary/20 blur-3xl -z-10" />
           </div>
           
+          {/* 우측: ABOUT US 본문 내용 */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:col-span-7 space-y-8"
           >
-            <h2 className="text-secondary font-bold mb-4 tracking-widest text-sm uppercase">About Us</h2>
+            <div className="flex items-center gap-2.5">
+              <div className="h-0.5 w-6 bg-[#FEE500]" />
+              <h2 className="text-[#FEE500] font-black tracking-widest text-sm uppercase">ABOUT THE ASSOCIATION</h2>
+            </div>
             
             <div className="relative group/title inline-block w-full">
-              <h3 className="text-3xl md:text-5xl font-black mb-8 leading-tight break-keep whitespace-pre-line">
-                {config?.missionTitle || "협회 소개"}
+              <h3 className="text-4xl md:text-6xl font-black leading-tight tracking-tight break-keep text-white">
+                {missionTitle}
               </h3>
               {onEditText && (
                 <button 
@@ -1584,34 +1645,88 @@ const Mission = ({ config, onEditImage, onEditText }: { config: any, onEditImage
               )}
             </div>
 
-            <div className="relative group/desc inline-block w-full mb-12">
-              <p className="text-lg text-white/80 leading-relaxed break-keep whitespace-pre-line">
-                {config?.missionDesc || "한국공예치료사 협회는 공예를 통해 사람의 마음을 돌보고, 삶의 온기를 회복하는 치유의 시간을 만들어갑니다."}
+            {/* 슬로건 / 부제 박스 */}
+            <div className="relative group/sub p-6 md:p-7 rounded-2xl bg-white/10 border-l-4 border-[#FEE500] border-y border-r border-white/15 backdrop-blur-md shadow-lg">
+              <p className="text-xl md:text-2xl font-extrabold text-white leading-snug break-keep whitespace-pre-line">
+                {missionSubtitle}
+              </p>
+              {onEditText && (
+                <button 
+                  onClick={() => onEditText('missionSubtitle', '소개 부제 수정')} 
+                  className="absolute top-3 right-3 bg-white text-slate-700 p-1.5 rounded-full border border-slate-100 shadow-md hover:text-primary transition-all hover:scale-110 flex items-center justify-center cursor-pointer"
+                  title="부제 수정"
+                >
+                  <Edit size={12} />
+                </button>
+              )}
+            </div>
+
+            {/* 본문 소개글 (글씨 크기 확대 및 핵심 차별점 강조) */}
+            <div className="relative group/desc rounded-2xl bg-black/15 p-6 md:p-8 border border-white/10 backdrop-blur-sm">
+              <p className="text-lg md:text-xl text-white/95 leading-loose break-keep font-medium">
+                본 협회는{' '}
+                <span className="text-white font-black underline decoration-[#FEE500] decoration-[3px] underline-offset-8">
+                  심리학 및 예술치료 전문 전공자들
+                </span>
+                의{' '}
+                <span className="text-white font-black underline decoration-[#FEE500] decoration-[3px] underline-offset-8">
+                  학문적 이론
+                </span>
+                과{' '}
+                <span className="text-white font-black underline decoration-[#FEE500] decoration-[3px] underline-offset-8">
+                  임상적 지식
+                </span>
+                을 바탕으로, 공예 매체의 심리적 기제를 정교하게 분석합니다. 대상과 환경에 체계적으로 맞춘 공예심리 프로그램을 연구·개발하며, 엄격한 교육과 현장 검증을 통해 공예심리 분야의{' '}
+                <span className="text-[#FEE500] font-black bg-[#FEE500]/15 px-2.5 py-1 rounded-lg border border-[#FEE500]/50 shadow-sm inline-block mx-1">
+                  독보적인 전문성과 학문적 표준
+                </span>
+                을 확립해 나가고 있습니다.
               </p>
               {onEditText && (
                 <button 
                   onClick={() => onEditText('missionDesc', '협회 소개 설명문 수정')} 
-                  className="absolute -top-3 right-0 bg-white text-slate-700 p-2 rounded-full border border-slate-100 shadow-md hover:text-primary transition-all hover:scale-110 flex items-center justify-center cursor-pointer"
+                  className="absolute top-4 right-4 bg-white text-slate-700 p-2 rounded-full border border-slate-100 shadow-md hover:text-primary transition-all hover:scale-110 flex items-center justify-center cursor-pointer"
                   title="설명문 수정"
                 >
                   <Edit size={14} />
                 </button>
               )}
             </div>
-            
-            <div className="space-y-4">
-              {[
-                "공예치료 전문 인재 양성",
-                "감정회복 중심 프로그램 개발",
-                "아동 성인 노인대상 치유프로그램 연구",
-                "지역 사회 정서회복 활동",
-                "한국형 공예치료 콘텐츠 개발"
-              ].map((item, idx) => (
-                <div key={idx} className="flex items-center gap-3">
-                  <div className="w-1.5 h-1.5 bg-primary rounded-full shrink-0" />
-                  <p className="font-medium text-white/90 text-lg break-keep">{item}</p>
+
+            {/* 일반 공예와의 차별점 3대 핵심 기둥 카드 (좌우 균형 및 차별성 부각) */}
+            <div className="grid sm:grid-cols-3 gap-4 pt-2">
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-4.5 backdrop-blur-sm hover:bg-white/10 transition-colors">
+                <div className="flex items-center gap-2 mb-2">
+                  <GraduationCap size={18} className="text-[#FEE500]" />
+                  <span className="text-xs font-black text-[#FEE500] uppercase tracking-wider">차별점 01</span>
                 </div>
-              ))}
+                <h5 className="text-base font-bold text-white mb-1.5">학문적 이론</h5>
+                <p className="text-xs text-white/75 leading-relaxed break-keep">
+                  심리학과 예술치료의 정통 학문 체계로 공예 매체의 심리적 기제를 정밀 분석
+                </p>
+              </div>
+
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-4.5 backdrop-blur-sm hover:bg-white/10 transition-colors">
+                <div className="flex items-center gap-2 mb-2">
+                  <Award size={18} className="text-[#FEE500]" />
+                  <span className="text-xs font-black text-[#FEE500] uppercase tracking-wider">차별점 02</span>
+                </div>
+                <h5 className="text-base font-bold text-white mb-1.5">임상적 지식</h5>
+                <p className="text-xs text-white/75 leading-relaxed break-keep">
+                  현장 임상 검증을 기반으로 생애주기별·대상별 최적화된 치유 프로그램 설계
+                </p>
+              </div>
+
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-4.5 backdrop-blur-sm hover:bg-white/10 transition-colors">
+                <div className="flex items-center gap-2 mb-2">
+                  <UserCheck size={18} className="text-[#FEE500]" />
+                  <span className="text-xs font-black text-[#FEE500] uppercase tracking-wider">차별점 03</span>
+                </div>
+                <h5 className="text-base font-bold text-white mb-1.5">전문 전공자</h5>
+                <p className="text-xs text-white/75 leading-relaxed break-keep">
+                  단순 공예 체험을 넘어 심리치료 전공진이 수립한 독보적 표준과 엄격한 교육
+                </p>
+              </div>
             </div>
           </motion.div>
         </div>
