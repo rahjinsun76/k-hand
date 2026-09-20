@@ -1587,16 +1587,12 @@ const Mission = ({ config, onEditImage, onEditText }: { config: any, onEditImage
               transition={{ duration: 0.8, delay: 0.2 }}
               className="rounded-3xl bg-white/5 border border-white/10 p-7 backdrop-blur-md shadow-xl relative overflow-hidden"
             >
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-xs font-bold bg-[#FEE500]/20 text-[#FEE500] border border-[#FEE500]/30 px-3 py-1 rounded-full uppercase tracking-wider">
-                  대표 소개
-                </span>
-                <Award size={20} className="text-[#FEE500]" />
-              </div>
-              
-              <div className="flex items-baseline gap-3 mb-1">
-                <h4 className="text-2xl font-black text-white tracking-tight">나진선</h4>
-                <span className="text-sm font-bold text-[#FEE500]">한국공예치료사협회 대표</span>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-baseline gap-3">
+                  <h4 className="text-2xl font-black text-white tracking-tight">나진선</h4>
+                  <span className="text-sm font-bold text-[#FEE500]">한국공예치료사협회 대표</span>
+                </div>
+                <Award size={22} className="text-[#FEE500] shrink-0" />
               </div>
               
               <div className="w-10 h-0.5 bg-white/20 my-4" />
