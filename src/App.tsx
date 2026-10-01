@@ -43,15 +43,16 @@ import {
   ClipboardList,
   Image as ImageIcon,
   MessageCircle,
-  Search,
-  Copy,
-  Check,
   UserCheck,
   MapPin,
-  Award
+  Award,
+  QrCode,
+  Copy,
+  Check
 } from 'lucide-react';
 
 // --- Constants ---
+const DEFAULT_KAKAO_URL = "https://qr.kakao.com/talk/PUEqoPkMvMz5fsbC.JTfj.xZhVw-";
 const DEFAULT_NOTICES = [
   { id: 'notice_default_1', date: "2026.05.10", title: "하반기 협회 정기 교육 신청 안내 (선착순)", badge: "중요" },
   { id: 'notice_default_2', date: "2026.05.01", title: "5월 가정의 달 기념 특강 일정 안내", badge: "교육" },
@@ -1007,7 +1008,7 @@ const Certification = ({ config, onEditImage, onOpenApply, isAdmin, onOpenAdminV
                    transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut" }}
                    className="text-amber-300 ml-2"
                  >
-                   10월 오픈 예정
+                   27년 2월 오픈
                  </motion.span>
                </h3>
                <p className="text-white/70 text-base mb-10 leading-relaxed max-w-xl break-keep">
@@ -1600,7 +1601,7 @@ const Mission = ({ config, onEditImage, onEditText }: { config: any, onEditImage
               <div className="space-y-2.5">
                 {[
                   "임상심리사 2급 · 예술학석사(예술치료)",
-                  "단국대학교 예술치료 전공",
+                  "단국대학교 문화예술대학원 예술치료",
                   "단국대학교 전통복식 전공 대학원 수학(修學)",
                   "한복학원 원장"
                 ].map((item, idx) => (
@@ -1731,14 +1732,20 @@ const Mission = ({ config, onEditImage, onEditText }: { config: any, onEditImage
   );
 };
 
-const Contact = ({ config, onEditImage }: { config: any, onEditImage?: (field: string) => void }) => {
-  const [copiedId, setCopiedId] = useState(false);
-
-  const handleCopyId = () => {
-    navigator.clipboard.writeText("K-HAND");
-    setCopiedId(true);
-    setTimeout(() => setCopiedId(false), 2500);
-  };
+const Contact = ({ 
+  config, 
+  onEditImage,
+  onEditText,
+  isAdmin,
+  onOpenKakao
+}: { 
+  config: any, 
+  onEditImage?: (field: string) => void,
+  onEditText?: (field: string, label: string) => void,
+  isAdmin?: boolean,
+  onOpenKakao?: () => void
+}) => {
+  const kakaoUrl = config?.kakaoUrl || DEFAULT_KAKAO_URL;
 
   return (
     <section id="contact" className="bg-slate-50 py-24">
@@ -1769,85 +1776,51 @@ const Contact = ({ config, onEditImage }: { config: any, onEditImage?: (field: s
                     </div>
                  </div>
 
-                 {/* 1. 카카오톡 오픈채팅 바로가기 (유지) */}
-                 <a 
-                   href="https://open.kakao.com/o/phOl9LLi" 
-                   target="_blank" 
-                   rel="noreferrer"
-                   className="flex items-center justify-between p-6 rounded-3xl bg-[#FEE500]/15 hover:bg-[#FEE500]/30 border border-[#FEE500]/60 shadow-sm transition-all group"
-                 >
-                    <div className="flex items-center gap-6">
-                      <div className="w-16 h-16 bg-[#FEE500] rounded-2xl flex items-center justify-center text-[#371D1E] shadow-sm shrink-0">
-                         <MessageCircle size={30} className="fill-[#371D1E]" />
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="text-xs bg-[#371D1E] text-[#FEE500] px-2.5 py-0.5 rounded-full font-bold">오픈채팅</span>
-                          <span className="text-xs text-amber-900 font-bold">실시간 상담</span>
-                        </div>
-                        <p className="text-xl font-black text-slate-900 group-hover:text-primary transition-colors">
-                          오픈채팅 공예심리사 바로가기
-                        </p>
-                      </div>
-                    </div>
-                    <div className="w-10 h-10 rounded-full bg-white/80 flex items-center justify-center text-[#371D1E] group-hover:scale-110 transition-transform shrink-0">
-                      <ExternalLink size={20} />
-                    </div>
-                 </a>
-
-                 {/* 2. 카카오톡 1:1 개인 상담 (카톡 ID: K-HAND) */}
-                 <div className="p-6 rounded-3xl bg-white border-2 border-[#FEE500] shadow-sm relative overflow-hidden">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                      <div className="flex items-center gap-5">
+                 {/* K-HAND 카카오톡 1:1 상담 바로가기 */}
+                 <div className="relative group">
+                   <a 
+                     href={kakaoUrl} 
+                     target="_blank" 
+                     rel="noreferrer"
+                     onClick={(e) => {
+                       if (onOpenKakao) {
+                         e.preventDefault();
+                         onOpenKakao();
+                       }
+                     }}
+                     className="flex items-center justify-between p-6 rounded-3xl bg-[#FEE500]/15 hover:bg-[#FEE500]/30 border border-[#FEE500]/60 shadow-sm transition-all block cursor-pointer"
+                   >
+                      <div className="flex items-center gap-6">
                         <div className="w-16 h-16 bg-[#FEE500] rounded-2xl flex items-center justify-center text-[#371D1E] shadow-sm shrink-0">
-                           <UserCheck size={28} className="text-[#371D1E]" />
+                           <MessageCircle size={30} className="fill-[#371D1E]" />
                         </div>
                         <div>
                           <div className="flex items-center gap-2 mb-1">
-                            <span className="text-xs bg-primary text-white px-2.5 py-0.5 rounded-full font-bold">1:1 개인상담</span>
-                            <span className="text-xs text-slate-500 font-bold">카카오톡 ID 검색</span>
+                            <span className="text-xs bg-[#371D1E] text-[#FEE500] px-2.5 py-0.5 rounded-full font-bold">1:1 실시간 상담</span>
+                            <span className="text-xs text-amber-900 font-bold">카카오톡 채널</span>
                           </div>
-                          <div className="flex items-baseline gap-2">
-                            <span className="text-xs text-slate-400 font-bold">카톡 ID</span>
-                            <span className="text-2xl font-black text-slate-900 tracking-wider font-mono">K-HAND</span>
-                          </div>
+                          <p className="text-xl font-black text-slate-900 group-hover:text-primary transition-colors">
+                            K-HAND 1:1 카카오톡 상담 바로가기
+                          </p>
+                          <p className="text-xs text-slate-500 mt-1">
+                            클릭 시 K-HAND 전용 1:1 상담 채팅방으로 바로 연결됩니다.
+                          </p>
                         </div>
                       </div>
-                      
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={handleCopyId}
-                          type="button"
-                          className={`px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-1.5 transition-all shadow-sm cursor-pointer ${
-                            copiedId 
-                              ? 'bg-emerald-600 text-white' 
-                              : 'bg-[#FEE500] text-[#371D1E] hover:bg-[#FEE500]/80'
-                          }`}
-                        >
-                          {copiedId ? (
-                            <>
-                              <Check size={14} /> ID 복사완료!
-                            </>
-                          ) : (
-                            <>
-                              <Copy size={14} /> ID 복사하기
-                            </>
-                          )}
-                        </button>
-                        <a
-                          href="kakaotalk://addfriend?id=K-HAND"
-                          className="px-3.5 py-2.5 rounded-xl font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors flex items-center gap-1"
-                          title="모바일 카카오톡 앱 열기"
-                        >
-                          카톡 열기
-                        </a>
+                      <div className="w-10 h-10 rounded-full bg-white/80 flex items-center justify-center text-[#371D1E] group-hover:scale-110 transition-transform shrink-0">
+                        <ExternalLink size={20} />
                       </div>
-                    </div>
-                    
-                    <p className="text-xs text-slate-500 mt-3 pt-3 border-t border-slate-100 flex items-center gap-1.5 break-keep">
-                      <span className="shrink-0">💬</span> 
-                      <span>카카오톡 상단 <strong>친구추가(👤+)</strong> &gt; <strong>[ID로 추가]</strong>에서 <strong className="text-slate-900 font-bold underline decoration-[#FEE500] decoration-2">K-HAND</strong>를 검색해 1:1 상담을 시작하세요.</span>
-                    </p>
+                   </a>
+                   {isAdmin && onEditText && (
+                     <button
+                       onClick={() => onEditText('kakaoUrl', '카카오톡 1:1 상담 링크 수정')}
+                       className="absolute top-3 right-3 p-1.5 px-2.5 bg-slate-900 text-white rounded-xl opacity-70 hover:opacity-100 transition-opacity shadow-md text-xs flex items-center gap-1 z-10 cursor-pointer"
+                       title="카톡 링크 수정"
+                     >
+                       <Edit size={13} />
+                       <span className="text-[10px]">링크 수정</span>
+                     </button>
+                   )}
                  </div>
                  
                  <div className="flex items-center gap-6 p-6 rounded-3xl bg-white border border-slate-100 shadow-sm">
@@ -1874,11 +1847,17 @@ const Contact = ({ config, onEditImage }: { config: any, onEditImage?: (field: s
 
                  <div className="flex gap-4 pt-4">
                     <a 
-                      href="https://open.kakao.com/o/phOl9LLi" 
+                      href={kakaoUrl} 
                       target="_blank" 
                       rel="noreferrer"
-                      className="w-14 h-14 bg-[#FEE500] rounded-2xl flex items-center justify-center text-[#371D1E] hover:scale-105 transition-all shadow-sm"
-                      title="카카오톡 오픈채팅"
+                      onClick={(e) => {
+                        if (onOpenKakao) {
+                          e.preventDefault();
+                          onOpenKakao();
+                        }
+                      }}
+                      className="w-14 h-14 bg-[#FEE500] rounded-2xl flex items-center justify-center text-[#371D1E] hover:scale-105 transition-all shadow-sm cursor-pointer"
+                      title="K-HAND 1:1 카카오톡 상담 바로가기"
                     >
                         <MessageCircle size={24} className="fill-[#371D1E]" />
                     </a>
@@ -1970,6 +1949,133 @@ const MaterialBanner = () => {
   );
 };
 
+const KakaoModal = ({
+  isOpen,
+  onClose,
+  kakaoUrl
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  kakaoUrl: string;
+}) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyId = () => {
+    navigator.clipboard.writeText("K-HAND");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div 
+        className="bg-white rounded-3xl max-w-md w-full p-6 md:p-8 shadow-2xl border border-slate-100 relative overflow-hidden animate-fade-in"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="absolute top-0 left-0 right-0 h-2.5 bg-[#FEE500]" />
+        
+        <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-6 pt-1">
+          <div className="flex items-center gap-2.5">
+            <div className="w-10 h-10 rounded-2xl bg-[#FEE500] flex items-center justify-center text-[#371D1E] shadow-sm">
+              <MessageCircle size={22} className="fill-[#371D1E]" />
+            </div>
+            <div>
+              <h3 className="text-lg font-black text-slate-900">카카오톡 1:1 상담 안내</h3>
+              <p className="text-xs text-slate-500 font-medium">한국공예치료사협회 K-HAND</p>
+            </div>
+          </div>
+          <button 
+            type="button"
+            onClick={onClose} 
+            className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-colors cursor-pointer"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        {/* QR Code Section */}
+        <div className="text-center mb-6">
+          <div className="inline-block p-3.5 bg-white rounded-2xl border-2 border-[#FEE500] shadow-md mb-3">
+            <img 
+              src="/kakao_qr.png" 
+              alt="한국공예치료사협회 K-HAND 카카오톡 QR코드" 
+              className="w-44 h-44 mx-auto object-contain rounded-xl"
+            />
+          </div>
+          <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-amber-900 bg-[#FEE500]/25 py-1.5 px-3.5 rounded-full w-fit mx-auto mb-2">
+            <QrCode size={15} />
+            <span>스마트폰 카메라로 스캔해 주세요</span>
+          </div>
+          <p className="text-xs text-slate-500 break-keep leading-relaxed">
+            스마트폰 기본 카메라로 위 QR코드를 비추시면<br />
+            <strong>대표님과의 1:1 카카오톡 상담창</strong>으로 바로 연결됩니다.
+          </p>
+        </div>
+
+        {/* ID Copy Option */}
+        <div className="bg-slate-50 rounded-2xl p-4 mb-6 border border-slate-100">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-[11px] text-slate-400 font-bold mb-0.5">카카오톡 ID로 친구 추가 후 1:1 문의</p>
+              <p className="text-lg font-black text-slate-900 tracking-wider">K-HAND</p>
+            </div>
+            <button
+              type="button"
+              onClick={handleCopyId}
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                copied 
+                  ? 'bg-emerald-500 text-white shadow-sm' 
+                  : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200'
+              }`}
+            >
+              {copied ? (
+                <>
+                  <Check size={14} />
+                  <span>복사완료!</span>
+                </>
+              ) : (
+                <>
+                  <Copy size={14} />
+                  <span>ID 복사</span>
+                </>
+              )}
+            </button>
+          </div>
+          <p className="text-[11px] text-slate-400 mt-2">
+            카카오톡 친구 목록 &gt; 우측 상단 친구 추가 &gt; <strong>ID로 추가</strong>
+          </p>
+        </div>
+
+        {/* Direct Link Option */}
+        <div className="space-y-2">
+          <a
+            href={kakaoUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="w-full py-3 px-4 bg-[#FEE500] hover:bg-[#ebd300] text-[#371D1E] rounded-xl font-black text-sm flex items-center justify-center gap-2 transition-all shadow-sm block text-center"
+          >
+            <MessageCircle size={18} className="fill-[#371D1E]" />
+            <span>스마트폰 또는 카톡 앱에서 열기</span>
+            <ExternalLink size={14} />
+          </a>
+          <button
+            type="button"
+            onClick={onClose}
+            className="w-full py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-medium text-xs transition-colors cursor-pointer"
+          >
+            닫기
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -1979,6 +2085,7 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   
   // Custom Edit States
+  const [isKakaoModalOpen, setIsKakaoModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
@@ -2115,6 +2222,17 @@ export default function App() {
   };
 
   const handleLogout = () => auth.signOut();
+
+  const handleOpenKakao = (e?: React.MouseEvent) => {
+    if (e) e.preventDefault();
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    const targetUrl = config?.kakaoUrl || DEFAULT_KAKAO_URL;
+    if (isMobile) {
+      window.location.href = targetUrl;
+    } else {
+      setIsKakaoModalOpen(true);
+    }
+  };
 
   const handleAddNotice = () => {
     setEditTarget({ 
@@ -2435,7 +2553,13 @@ export default function App() {
           }}
         />
         <MaterialBanner />
-        <Contact config={config} onEditImage={isAdmin ? handleEditConfigImage : undefined} />
+        <Contact 
+          config={config} 
+          onEditImage={isAdmin ? handleEditConfigImage : undefined} 
+          onEditText={isAdmin ? handleEditText : undefined}
+          isAdmin={isAdmin}
+          onOpenKakao={handleOpenKakao}
+        />
       </main>
       
       <footer className="bg-slate-950 text-white py-20">
@@ -2476,13 +2600,40 @@ export default function App() {
            <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 text-slate-600 text-sm font-bold">
              <p>© 2026 한국공예치료사 협회 K-Hand. All rights reserved.</p>
              <div className="flex gap-6 items-center">
-                <a href="https://open.kakao.com/o/phOl9LLi" target="_blank" rel="noreferrer" title="카카오톡 오픈채팅" className="hover:text-[#FEE500] transition-colors"><MessageCircle size={20} className="fill-current" /></a>
+                <button type="button" onClick={handleOpenKakao} title="K-HAND 1:1 카카오톡 상담 바로가기" className="hover:text-[#FEE500] transition-colors cursor-pointer"><MessageCircle size={20} className="fill-current" /></button>
                 <a href="https://blog.naver.com/sewingtherapy" target="_blank" rel="noreferrer" title="네이버 블로그" className="hover:text-white transition-colors"><BookOpen size={20} /></a>
                 <a href="https://www.instagram.com/korea_hand_healing_art?igsh=cDl0cGFkN2twd2l6" target="_blank" rel="noreferrer" title="인스타그램" className="hover:text-white transition-colors"><Instagram size={20} /></a>
              </div>
            </div>
         </div>
       </footer>
+
+      {/* 우측 하단 플로팅 카카오톡 1:1 상담 버튼 */}
+      <aside aria-label="카카오톡 1:1 실시간 상담">
+        <button
+          type="button"
+          onClick={handleOpenKakao}
+          className="fixed bottom-6 right-6 z-50 group flex items-center gap-2.5 active:scale-95 transition-all cursor-pointer"
+          title="K-HAND 1:1 카카오톡 상담 바로가기"
+        >
+          <span className="hidden sm:flex items-center gap-1.5 bg-[#371D1E] text-white text-xs font-bold px-3.5 py-2 rounded-full shadow-2xl opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0 pointer-events-none border border-[#FEE500]/30">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+            1:1 카톡 상담하기
+          </span>
+          <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-[#FEE500] text-[#371D1E] shadow-2xl hover:shadow-[0_8px_25px_rgba(254,229,0,0.6)] hover:scale-108 transition-all flex items-center justify-center border-2 border-white/80 cursor-pointer">
+            <svg viewBox="0 0 24 24" className="w-8 h-8 fill-[#371D1E]">
+              <path d="M12 3C6.477 3 2 6.477 2 10.767c0 2.766 1.83 5.19 4.606 6.518-.2.748-.727 2.709-.76 2.86-.052.236.086.324.221.233.177-.118 2.824-1.918 3.273-2.228.81.116 1.653.178 2.51.178 5.523 0 10-3.477 10-7.767C22 6.477 17.523 3 12 3z"/>
+              <text x="12" y="11.5" textAnchor="middle" dominantBaseline="central" fill="#FEE500" fontSize="5" fontWeight="900" fontFamily="sans-serif">TALK</text>
+            </svg>
+          </div>
+        </button>
+      </aside>
+
+      <KakaoModal 
+        isOpen={isKakaoModalOpen}
+        onClose={() => setIsKakaoModalOpen(false)}
+        kakaoUrl={config?.kakaoUrl || DEFAULT_KAKAO_URL}
+      />
 
       <NoticeDetailModal 
         isOpen={isDetailModalOpen}
